@@ -1,15 +1,63 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <%= link_to "Mycrm app", '#', id: "logo" %>
+      <%= link_to "Mycrm app", root_path, id: "logo" %>
       <nav>
+        <ul class="nav navbar-nav pull-left dropdown-menu">
+          <li><%= link_to "个人首页", root_path %></li>
+          <%# if can? :dashboard, :crm %>
+            <li><%= link_to "销售报表", dashboard_crm_overview_path %></li>
+          <%# end %>
+          <%#if can? :dashboard, :fm %>
+            <li><%= link_to "财务报表", dashboard_fm_overview_path %></li>
+          <%#end %>
+          <%#if can? :dashboard, :oa %>
+            <li><%= link_to "组织架构", dashboard_oa_overview_path %></li>
+          <%#end %>
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">CRM <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "联系人" %></li>
+              <li><%= link_to "客户" %></li>
+              <li class="divider"></li>
+              <li><%= link_to "商机" %></li>
+              <li><%= link_to "活动"%></li>
+            </ul>
+          </li>
+
+          <li><%= link_to "合同" %></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">财务 <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "收款计划" %></li>
+              <li class="divider"></li>
+              <li><%= link_to "开票" %></li>
+              <li><%= link_to "到款" %></li>
+            </ul>
+          </li>
+        </ul>
         <ul class="nav navbar-nav pull-right">
-          <li><%= link_to "Home",    root_path %></li>
-          <li><%= link_to "Users",    "" %></li>
-          <li><%= link_to "Help",    '#' %></li>
-          <li><%= link_to "Sign in", new_user_session_path %></li>
-          <li><%= link_to "Sign out", destroy_user_session_path, method: :delete %></li>
-          <li><%= link_to "Edit profile", edit_user_registration_path %></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">设置 <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <%#if can? :manage, User %>
+                <li><%= link_to "用户管理", users_path %></li>
+              <%#end %>
+              <%#if can? :manage, Organization %>
+                <li><%= link_to "组织架构" %></li>
+              <%#end %>
+              <%#if can? :manage, :properties %>
+                <li><%= link_to "属性管理" %></li>
+              <%#end %>
+
+              <%#if can? :manage, Role %>
+                <li><%= link_to "权限管理" %></li>
+              <%#end %>
+            </ul> 
+          </li>
+          <li><%= link_to current_user.email, current_user %></li>
+      <li><%= link_to "退出", destroy_user_session_path, :method => :delete %></li>
         </ul>
       </nav>
     </div>

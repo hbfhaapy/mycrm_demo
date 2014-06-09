@@ -1,13 +1,22 @@
 Rails.application.routes.draw do
-  
+
   devise_for :users
   root 'dashboard#index'
-  
+
   namespace :dashboard do
     get "index", :as => :all
     get "crm", :as => :crm_overview
     get "fm", :as => :fm_overview
+    get "oa", :as => :oa_overview
   end
+
+  #修改密码  
+  match "users/update_password/:id" => 'users#update_password', :as => :change_password, via: [:get, :patch]
+
+  get "users/add" => "users#add"
+
+  resources :users 
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

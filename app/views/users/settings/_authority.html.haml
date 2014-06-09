@@ -1,0 +1,10 @@
+= simple_form_for @user, :html => {:method => :put, :multipart => true} do |f|
+  .checkbox
+    = f.input :approved, hint: '', label: '允许登陆系统'
+  .form-group
+    = f.input :level, collection: 0..5, label: "审核级别："
+  .form-inline
+    %strong.red 权限选择
+    .form-group.alert.alert-warning.mt1
+      = f.association :roles, as: :check_boxes, label: false, input_html: { class: "checkbox-inline" }
+  = f.submit "保存设置", class: "btn btn-warning btn-lg mt1"

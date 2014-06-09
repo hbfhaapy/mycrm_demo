@@ -1,0 +1,27 @@
+%h1.clearfix
+  用户管理
+  \#{all_count_tag @users}
+  \#{link_to "新增用户", new_user_path, remote: true, class: "btn btn-primary pull-right"}
+.ajax-form
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :username_cont, class:"form-control input-sm", placeholder: "姓名"
+    .form-group
+      = f.text_field :email_cont, class:"form-control input-sm", placeholder: "邮箱"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.users.table.table-striped.table-hover
+  %thead
+    %tr
+      %th= sort_link @q, :id, "ID", {}, :method => action_name == 'users_advanced_search' ? :post : :get
+      %th 头像
+      %th= sort_link @q, :username, "姓名", {}, :method => action_name == 'users_advanced_search' ? :post : :get
+      %th= sort_link @q, :email, "邮箱", {}, :method => action_name == 'users_advanced_search' ? :post : :get
+      %th 部门
+      %th 审核级别
+      %th 操作
+  %tbody
+    - @users.each do |u|
+      = render partial: "users/user", locals: { user: u }
+.text-center
+  = render partial: "layouts/page", locals: { objects: @users }

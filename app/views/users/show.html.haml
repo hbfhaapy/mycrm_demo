@@ -1,0 +1,14 @@
+.panel.panel-default
+  .panel-body
+    = image_tag(@user.avatar_url(:large), class: "pull-left mr1")
+    / - if can? :update, @user
+    = link_to "修改个人信息", edit_user_path, class: "pull-right"
+    %h1= @user.username
+    %p
+      邮箱：#{@user.email}
+      %br/
+      部门：{user_org_tag(@user)}
+      \&nbsp;&nbsp;审核级别：{user_checking_level_tag(@user)}
+      \&nbsp;&nbsp;权限：{user_roles_tag(@user)}
+  .panel-footer
+    = @user.last_sign_in_at ? "上次登陆于#{time_ago_in_words @user.last_sign_in_at}前" : "从未登陆"

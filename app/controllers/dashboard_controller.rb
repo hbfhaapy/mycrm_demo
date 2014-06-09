@@ -17,4 +17,7 @@ class DashboardController < ApplicationController
     
   end
   
+  def oa
+    
+  end
 end

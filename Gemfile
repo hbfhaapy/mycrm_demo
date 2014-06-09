@@ -1,14 +1,26 @@
 source 'https://rubygems.org'
 
 ruby '2.1.2'
+
+# authenticate
 gem 'devise'
+gem 'rolify'
+gem 'cancan'
 
 # ui
 gem 'bootstrap-sass'
 
+# form
+gem 'simple_form'
+gem "nested_form" #子表单
+
 # haml 
 gem 'haml'
 gem 'haml-rails'
+
+# upload files
+gem "carrierwave"
+gem "mini_magick"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.1'
@@ -45,5 +57,5 @@ gem 'spring',        group: :development
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
-# gem 'debugger', group: [:development, :test]
+gem 'debugger2', group: [:development, :test]
 
