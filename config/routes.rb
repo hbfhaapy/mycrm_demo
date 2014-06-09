@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  
+  devise_for :users
+  root 'dashboard#index'
+  
+  namespace :dashboard do
+    get "index", :as => :all
+    get "crm", :as => :crm_overview
+    get "fm", :as => :fm_overview
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
