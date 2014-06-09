@@ -3,6 +3,13 @@ source 'https://rubygems.org'
 ruby '2.1.2'
 gem 'devise'
 
+# ui
+gem 'bootstrap-sass'
+
+# haml 
+gem 'haml'
+gem 'haml-rails'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.1'
 # Use mysql as the database for Active Record

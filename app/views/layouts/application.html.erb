@@ -8,20 +8,22 @@
 </head>
 <body>
   <header>
-    <% if notice %>
-      <p class="notice"><%= notice %></p>
-    <% end %>
-    <% if alert %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
+    <%= render 'layouts/header' %>  
   </header>
 
-  <section>
+  <% if notice %>
+    <p class="alert alert-success"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-warning"><%= alert %></p>
+  <% end %>
+
+  <div class="container">
     <%= yield %>
-  </section>
+  </div>
 
   <footer>
-    
+    <%= render 'layouts/footer' %> 
   </footer>
 
 </body>
