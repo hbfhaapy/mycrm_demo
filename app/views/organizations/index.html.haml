@@ -1,27 +1,19 @@
-%h1 Listing organizations
-
-%table
-  %tr
-    %th Name
-    %th Parent
-    %th Lft
-    %th Rgt
-    %th Depth
-    %th
-    %th
-    %th
-
-  - @organizations.each do |organization|
+%h1.clearfix
+  %span.pull-left
+    组织架构
+    \#{all_count_tag @organizations}
+  = link_to "新增分支", new_organization_path, remote: true, class: "btn btn-primary pull-right"
+  = link_to '组织架构管理', manage_organizations_path, class: "btn btn-warning pull-right mr1"
+.ajax-form
+%table.table.table-striped.table-hover
+  %thead
     %tr
-      %td= organization.name
-      %td= organization.parent_id
-      %td= organization.lft
-      %td= organization.rgt
-      %td= organization.depth
-      %td= link_to 'Show', organization
-      %td= link_to 'Edit', edit_organization_path(organization)
-      %td= link_to 'Destroy', organization, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Organization', new_organization_path
+      %th ID
+      %th 名称
+      %th 父级
+      %th 操作
+  %tbody
+    - @organizations.each do |organization|
+      = render partial: "organizations/organization", locals: { organization: organization }
+/ .text-center
+/   = render partial: "layouts/page", locals: { objects: @organizations }

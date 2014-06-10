@@ -13,4 +13,10 @@
  *= require_tree .
  *= require_self
  *= require bootstrap
+ *= require tree
+ *= require sortable_tree
+ *= require nested_options
+ *= require jquery.ui.all
+ *= require selectize
+ *= require selectize.default
  */

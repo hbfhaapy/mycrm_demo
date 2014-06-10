@@ -73,5 +73,5 @@ class AvatarUploader < CarrierWave::Uploader::Base
   #     Rails.logger.debug("(BaseUploader.filename) #{model.uploader_secure_token}")
   #     "#{model.uploader_secure_token}.#{file.extension.downcase}"
   #   end
-  # end
+  # endd
 end

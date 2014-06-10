@@ -62,3 +62,10 @@ gem "mini_magick"
 gem "ransack" #字段搜索及排序
 #日期排序
 gem 'by_star', :git => "git://github.com/radar/by_star"
+# nested attributes
+gem 'awesome_nested_set', git: 'https://github.com/collectiveidea/awesome_nested_set.git', tag: 'v3.0.0.rc.5' #多级分类tree
+#GUI Tree
+gem 'the_sortable_tree'
+gem 'jquery-ui-rails'  # sort tree require
+gem 'font-awesome-rails' #图标
+gem 'selectize-rails'

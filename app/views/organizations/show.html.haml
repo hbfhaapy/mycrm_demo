@@ -1,21 +1,25 @@
-%p#notice= notice
-
-%p
-  %b Name:
-  = @organization.name
-%p
-  %b Parent:
-  = @organization.parent_id
-%p
-  %b Lft:
-  = @organization.lft
-%p
-  %b Rgt:
-  = @organization.rgt
-%p
-  %b Depth:
-  = @organization.depth
-
-= link_to 'Edit', edit_organization_path(@organization)
-\|
-= link_to 'Back', organizations_path
+%h1.clearfix
+  %span.pull-left= @organization.name
+  = link_to '返回', organizations_path, class: "btn btn-default pull-right", 'data-skip-pjax' => true
+%table.table
+  %tr
+    %td
+      %b 父级:
+      = org_parent_tag(@organization)
+    %td
+      %b 成员:
+      %span.red
+        = @organization.users.size
+        人
+- if @organization.users.present?
+  %table.table.table-striped
+    %thead
+      %th 头像
+      %th 姓名
+      %th 邮箱
+      %tbody
+        - @organization.users.each do |user|
+          %tr
+            %td= image_tag(user.avatar_url(:mini))
+            %td= link_to user.username, user
+            %td= user.email

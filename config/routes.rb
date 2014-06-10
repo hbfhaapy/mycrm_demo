@@ -50,7 +50,13 @@ Rails.application.routes.draw do
     resources :companies
   end
 
-  resources :organizations
+  resources :organizations do
+    collection do
+      get :manage
+      # required for Sortable GUI server side actions
+      post :rebuild
+    end
+  end
 
   resources :roles
 

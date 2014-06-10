@@ -1,6 +1,6 @@
-/ = simple_form_for @user, :html => {:method => :put, :multipart => true} do |f|
-/   - if can? :manage, User
-/     .row
-/       .form-group.col-xs-3
-/         = select_tag :organization_id, nested_options(@organizations, title: :name, :selected => @user.organization), class: "form-control"
-/   = f.submit "保存设置", class: "btn btn-warning btn-lg"
+= simple_form_for @user, :html => {:method => :put, :multipart => true} do |f|
+  / - if can? :manage, User
+  .row
+    .form-group.col-xs-3
+      = select_tag :organization_id, nested_options(@organizations, title: :name, :selected => @user.organization), class: "form-control"
+  = f.submit "保存设置", class: "btn btn-warning btn-lg"

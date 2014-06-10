@@ -7,4 +7,9 @@ module ApplicationHelper
   def nil_label
     content_tag :span, 'Nothing', class: "label label-default"
   end
+  
+  def active(self_value, current_value, css = 'active')
+    self_value == current_value ? css : ''
+  end
+
 end

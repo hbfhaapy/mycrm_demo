@@ -1,0 +1,4 @@
+$(".ajax-form").hide().empty();
+$(".table tbody").append('<%= escape_javascript(render(:partial => "organizations/organization", locals: { :organization => @organization })) %>');
+
+defaultInit();

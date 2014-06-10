@@ -1,25 +1,7 @@
-= form_for @organization do |f|
-  - if @organization.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@organization.errors.count, "error")} prohibited this organization from being saved:"
-      %ul
-        - @organization.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :parent_id
-    = f.number_field :parent_id
-  .field
-    = f.label :lft
-    = f.number_field :lft
-  .field
-    = f.label :rgt
-    = f.number_field :rgt
-  .field
-    = f.label :depth
-    = f.number_field :depth
-  .actions
-    = f.submit 'Save'
+.alert.alert-warning.row
+  %a.close{"aria-hidden" => "true", "data-dismiss" => "alert", :href => "#"} &times;
+  = simple_form_for(@organization, remote: true) do |f|
+    .form-group.col-md-4
+      = f.input :name, label: false, placeholder: '名称', input_html: { class: "form-control" }
+    .col-md-4
+      = f.submit "提交", class: "btn btn-success"

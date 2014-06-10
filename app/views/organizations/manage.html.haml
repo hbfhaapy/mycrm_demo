@@ -1,0 +1,6 @@
+%h1.clearfix
+  %span.pull-left
+    组织架构管理
+    %span.red
+  = link_to '返回', organizations_path, class: "btn btn-default pull-right", 'data-skip-pjax' => true
+= content_tag(:ol, (sortable_tree @organizations, title: :name, rebuild_url: rebuild_organizations_path), class: 'sortable_tree', 'data-rebuild-url' => rebuild_organizations_path)

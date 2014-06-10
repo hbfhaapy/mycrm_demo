@@ -33,11 +33,20 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find_by(id: params[:id])
+    @organizations = Organization.nested_set.select('id, name, parent_id').all
   end
 
   def update
+
     @user = User.find(params[:id])
-    if @user.update_attributes(user_params)
+    @user.organization_id = params[:organization_id] 
+    if params[:organization_id]
+      if @user.save!
+        redirect_to @user, notice: '设置已保存'
+      else
+        redirect_to edit_user_path(@user), notice: '设置保存失败'
+      end
+    elsif @user.update_attributes(user_params)
       redirect_to @user, notice: '设置已保存'
     else
       redirect_to edit_user_path(@user), notice: '设置保存失败'
@@ -61,6 +70,6 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:username, :email, :password, :password_confirmation, :avatar)
+      params.require(:user).permit(:username, :email, :password, :password_confirmation, :remember_me, :avatar, :department_id, :approved, :role_ids, :organization_id, :level)
     end
 end

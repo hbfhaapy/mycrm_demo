@@ -1,10 +1,14 @@
 class OrganizationsController < ApplicationController
   before_action :set_organization, only: [:show, :edit, :update, :destroy]
-
+  include TheSortableTreeController::Rebuild
   # GET /organizations
   # GET /organizations.json
   def index
     @organizations = Organization.all
+  end
+
+  def manage
+    @organizations = Organization.nested_set.select('id, name, parent_id').all
   end
 
   # GET /organizations/1
@@ -15,6 +19,10 @@ class OrganizationsController < ApplicationController
   # GET /organizations/new
   def new
     @organization = Organization.new
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   # GET /organizations/1/edit
@@ -26,13 +34,11 @@ class OrganizationsController < ApplicationController
   def create
     @organization = Organization.new(organization_params)
 
-    respond_to do |format|
+    respond_to do |f|
       if @organization.save
-        format.html { redirect_to @organization, notice: 'Organization was successfully created.' }
-        format.json { render :show, status: :created, location: @organization }
+        f.js
       else
-        format.html { render :new }
-        format.json { render json: @organization.errors, status: :unprocessable_entity }
+        f.js { render :template => 'layouts/error', locals: { errors: @organization.errors } }
       end
     end
   end

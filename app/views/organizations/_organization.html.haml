@@ -1,0 +1,10 @@
+%tr{:id => "organization-#{organization.id}"}
+  %td= organization.id
+  %td.form-group.w320
+    = simple_form_for organization, remote: true do |f|
+      = f.input :name, label: false, input_html: { class: "form-control real-text-input" }
+  %td
+    = org_parent_tag(organization)
+  %td
+    = link_to "查看", organization, class: "btn btn-default btn-xs"
+    = link_to '删除', organization, method: :delete, data: { confirm: '确定删除?' }, remote: true, class: "btn btn-danger btn-xs"

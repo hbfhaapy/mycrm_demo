@@ -11,8 +11,12 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.ui.all
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
 //= require bootstrap
 //= require jquery_nested_form
+//= require jquery.ui.nestedSortable
+//= require sortable_tree/initializer
+//= require selectize

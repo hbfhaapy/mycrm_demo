@@ -11,8 +11,8 @@
     %li
       %a{"data-toggle" => "tab", :href => "#password"} 修改密码
     / - if can? :manage, User
-    /   %li
-    /     %a{"data-toggle" => "tab", :href => "#authority"} 权限设置
+    %li
+      %a{"data-toggle" => "tab", :href => "#authority"} 权限设置
 .col-md-10
   .tab-content
     #profile.tab-pane.active
@@ -22,5 +22,5 @@
     #password.tab-pane
       = render "users/settings/password"
     / - if can? :manage, User
-    /   #authority.tab-pane
-    /     = render "users/settings/authority"
+    #authority.tab-pane
+      = render "users/settings/authority"
