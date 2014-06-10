@@ -1,0 +1,33 @@
+%h1 Listing crm_deals
+
+%table
+  %tr
+    %th Name
+    %th Status
+    %th Category
+    %th Amount
+    %th Company
+    %th Contact
+    %th User
+    %th Time
+    %th
+    %th
+    %th
+
+  - @crm_deals.each do |crm_deal|
+    %tr
+      %td= crm_deal.name
+      %td= crm_deal.status_id
+      %td= crm_deal.category_id
+      %td= crm_deal.amount
+      %td= crm_deal.company_id
+      %td= crm_deal.contact_id
+      %td= crm_deal.user_id
+      %td= crm_deal.time
+      %td= link_to 'Show', crm_deal
+      %td= link_to 'Edit', edit_crm_deal_path(crm_deal)
+      %td= link_to 'Destroy', crm_deal, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Deal', new_crm_deal_path

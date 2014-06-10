@@ -1,0 +1,27 @@
+%h1 Listing crm_deal_pricelists
+
+%table
+  %tr
+    %th Content
+    %th Dealed
+    %th Deal
+    %th User
+    %th Contact
+    %th
+    %th
+    %th
+
+  - @crm_deal_pricelists.each do |crm_deal_pricelist|
+    %tr
+      %td= crm_deal_pricelist.content
+      %td= crm_deal_pricelist.dealed
+      %td= crm_deal_pricelist.deal_id
+      %td= crm_deal_pricelist.user_id
+      %td= crm_deal_pricelist.contact_id
+      %td= link_to 'Show', crm_deal_pricelist
+      %td= link_to 'Edit', edit_crm_deal_pricelist_path(crm_deal_pricelist)
+      %td= link_to 'Destroy', crm_deal_pricelist, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Pricelist', new_crm_deal_pricelist_path

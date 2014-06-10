@@ -1,0 +1,24 @@
+%p#notice= notice
+
+%p
+  %b Amount:
+  = @fm_income.amount
+%p
+  %b Time:
+  = @fm_income.time
+%p
+  %b Note:
+  = @fm_income.note
+%p
+  %b Collection:
+  = @fm_income.collection_id
+%p
+  %b Company:
+  = @fm_income.company_id
+%p
+  %b User:
+  = @fm_income.user
+
+= link_to 'Edit', edit_fm_income_path(@fm_income)
+\|
+= link_to 'Back', fm_incomes_path

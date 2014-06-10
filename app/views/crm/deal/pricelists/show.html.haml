@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Content:
+  = @crm_deal_pricelist.content
+%p
+  %b Dealed:
+  = @crm_deal_pricelist.dealed
+%p
+  %b Deal:
+  = @crm_deal_pricelist.deal_id
+%p
+  %b User:
+  = @crm_deal_pricelist.user_id
+%p
+  %b Contact:
+  = @crm_deal_pricelist.contact_id
+
+= link_to 'Edit', edit_crm_deal_pricelist_path(@crm_deal_pricelist)
+\|
+= link_to 'Back', crm_deal_pricelists_path

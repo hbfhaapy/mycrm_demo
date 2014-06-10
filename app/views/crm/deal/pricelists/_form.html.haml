@@ -1,0 +1,25 @@
+= form_for @crm_deal_pricelist do |f|
+  - if @crm_deal_pricelist.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@crm_deal_pricelist.errors.count, "error")} prohibited this crm_deal_pricelist from being saved:"
+      %ul
+        - @crm_deal_pricelist.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :content
+    = f.text_area :content
+  .field
+    = f.label :dealed
+    = f.check_box :dealed
+  .field
+    = f.label :deal_id
+    = f.number_field :deal_id
+  .field
+    = f.label :user_id
+    = f.number_field :user_id
+  .field
+    = f.label :contact_id
+    = f.number_field :contact_id
+  .actions
+    = f.submit 'Save'

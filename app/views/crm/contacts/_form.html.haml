@@ -1,0 +1,43 @@
+= form_for @crm_contact do |f|
+  - if @crm_contact.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@crm_contact.errors.count, "error")} prohibited this crm_contact from being saved:"
+      %ul
+        - @crm_contact.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :category_id
+    = f.number_field :category_id
+  .field
+    = f.label :company_id
+    = f.number_field :company_id
+  .field
+    = f.label :user
+    = f.text_field :user
+  .field
+    = f.label :mail
+    = f.text_field :mail
+  .field
+    = f.label :qq
+    = f.text_field :qq
+  .field
+    = f.label :msn
+    = f.text_field :msn
+  .field
+    = f.label :job
+    = f.text_field :job
+  .field
+    = f.label :note
+    = f.text_area :note
+  .field
+    = f.label :image
+    = f.text_field :image
+  .field
+    = f.label :status_id
+    = f.number_field :status_id
+  .actions
+    = f.submit 'Save'

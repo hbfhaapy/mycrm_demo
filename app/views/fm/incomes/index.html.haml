@@ -1,0 +1,29 @@
+%h1 Listing fm_incomes
+
+%table
+  %tr
+    %th Amount
+    %th Time
+    %th Note
+    %th Collection
+    %th Company
+    %th User
+    %th
+    %th
+    %th
+
+  - @fm_incomes.each do |fm_income|
+    %tr
+      %td= fm_income.amount
+      %td= fm_income.time
+      %td= fm_income.note
+      %td= fm_income.collection_id
+      %td= fm_income.company_id
+      %td= fm_income.user
+      %td= link_to 'Show', fm_income
+      %td= link_to 'Edit', edit_fm_income_path(fm_income)
+      %td= link_to 'Destroy', fm_income, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Income', new_fm_income_path

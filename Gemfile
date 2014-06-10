@@ -22,6 +22,12 @@ gem 'haml-rails'
 gem "carrierwave"
 gem "mini_magick"
 
+#search
+gem "ransack" #字段搜索及排序
+
+#日期排序
+gem 'by_star', :git => "git://github.com/radar/by_star"
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.1'
 # Use mysql as the database for Active Record

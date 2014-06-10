@@ -1,0 +1,18 @@
+%p#notice= notice
+
+%p
+  %b Url:
+  = @smartfinder.url
+%p
+  %b Klass:
+  = @smartfinder.klass
+%p
+  %b Name:
+  = @smartfinder.name
+%p
+  %b User:
+  = @smartfinder.user
+
+= link_to 'Edit', edit_smartfinder_path(@smartfinder)
+\|
+= link_to 'Back', smartfinders_path

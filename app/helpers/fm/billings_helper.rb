@@ -1,0 +1,2 @@
+module Fm::BillingsHelper
+end

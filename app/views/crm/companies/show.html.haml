@@ -1,0 +1,27 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @crm_company.name
+%p
+  %b Category:
+  = @crm_company.category
+%p
+  %b Zipcode:
+  = @crm_company.zipcode
+%p
+  %b Mail:
+  = @crm_company.mail
+%p
+  %b Note:
+  = @crm_company.note
+%p
+  %b Image:
+  = @crm_company.image
+%p
+  %b User:
+  = @crm_company.user
+
+= link_to 'Edit', edit_crm_company_path(@crm_company)
+\|
+= link_to 'Back', crm_companies_path

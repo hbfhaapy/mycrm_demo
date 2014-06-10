@@ -2,7 +2,8 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @users = User.all
+    @q = User.includes(:organization).where("id > ?", 1).search(params[:q])
+    @users = @q.result(:distinct => true).page(params[:page])
   end
 
   def new

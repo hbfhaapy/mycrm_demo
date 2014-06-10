@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  percent: 2014-06-10 08:00:49
+  time: 2014-06-10 08:00:49
+  contact_id: 1
+  user_id_id: 
+
+two:
+  name: MyString
+  percent: 2014-06-10 08:00:49
+  time: 2014-06-10 08:00:49
+  contact_id: 1
+  user_id_id: 

@@ -1,0 +1,39 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @crm_contact.name
+%p
+  %b Category:
+  = @crm_contact.category_id
+%p
+  %b Company:
+  = @crm_contact.company_id
+%p
+  %b User:
+  = @crm_contact.user
+%p
+  %b Mail:
+  = @crm_contact.mail
+%p
+  %b Qq:
+  = @crm_contact.qq
+%p
+  %b Msn:
+  = @crm_contact.msn
+%p
+  %b Job:
+  = @crm_contact.job
+%p
+  %b Note:
+  = @crm_contact.note
+%p
+  %b Image:
+  = @crm_contact.image
+%p
+  %b Status:
+  = @crm_contact.status_id
+
+= link_to 'Edit', edit_crm_contact_path(@crm_contact)
+\|
+= link_to 'Back', crm_contacts_path

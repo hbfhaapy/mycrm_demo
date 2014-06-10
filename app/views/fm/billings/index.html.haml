@@ -1,0 +1,29 @@
+%h1 Listing fm_billings
+
+%table
+  %tr
+    %th Amount
+    %th Time
+    %th Manager
+    %th Company
+    %th Collection
+    %th User
+    %th
+    %th
+    %th
+
+  - @fm_billings.each do |fm_billing|
+    %tr
+      %td= fm_billing.amount
+      %td= fm_billing.time
+      %td= fm_billing.manager_id
+      %td= fm_billing.company_id
+      %td= fm_billing.collection_id
+      %td= fm_billing.user
+      %td= link_to 'Show', fm_billing
+      %td= link_to 'Edit', edit_fm_billing_path(fm_billing)
+      %td= link_to 'Destroy', fm_billing, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Billing', new_fm_billing_path

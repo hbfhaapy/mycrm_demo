@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Content:
+  = @crm_address.content
+%p
+  %b Addressable:
+  = @crm_address.addressable_id
+%p
+  %b Addressable type:
+  = @crm_address.addressable_type
+
+= link_to 'Edit', edit_crm_address_path(@crm_address)
+\|
+= link_to 'Back', crm_addresses_path

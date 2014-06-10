@@ -1,0 +1,37 @@
+%h1 Listing cm_contracts
+
+%table
+  %tr
+    %th Name
+    %th Amount
+    %th Actual amount
+    %th Status
+    %th Agent
+    %th Signed at
+    %th Started at
+    %th Company
+    %th Plan
+    %th User
+    %th
+    %th
+    %th
+
+  - @cm_contracts.each do |cm_contract|
+    %tr
+      %td= cm_contract.name
+      %td= cm_contract.amount
+      %td= cm_contract.actual_amount
+      %td= cm_contract.status_id
+      %td= cm_contract.agent_id
+      %td= cm_contract.signed_at
+      %td= cm_contract.started_at
+      %td= cm_contract.company_id
+      %td= cm_contract.plan_id
+      %td= cm_contract.user
+      %td= link_to 'Show', cm_contract
+      %td= link_to 'Edit', edit_cm_contract_path(cm_contract)
+      %td= link_to 'Destroy', cm_contract, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Contract', new_cm_contract_path

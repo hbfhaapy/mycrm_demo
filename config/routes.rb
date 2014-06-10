@@ -1,5 +1,59 @@
 Rails.application.routes.draw do
 
+  namespace :crm do
+    namespace :deal do
+      resources :pricelists
+    end
+  end
+
+  resources :smartfinders
+
+  namespace :fm do
+    resources :incomes
+  end
+
+  namespace :fm do
+    resources :billings
+  end
+
+  namespace :cm do
+    resources :collections
+  end
+
+  namespace :cm do
+    resources :contracts
+  end
+
+  namespace :crm do
+    resources :activities
+  end
+
+  namespace :crm do
+    resources :deals
+  end
+
+  namespace :crm do
+    resources :contacts
+  end
+
+  namespace :crm do
+    resources :addresses
+  end
+
+  namespace :crm do
+    resources :phones
+  end
+
+  resources :properties
+
+  namespace :crm do
+    resources :companies
+  end
+
+  resources :organizations
+
+  resources :roles
+
   devise_for :users
   root 'dashboard#index'
 

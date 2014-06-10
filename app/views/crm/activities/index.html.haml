@@ -1,0 +1,35 @@
+%h1 Listing crm_activities
+
+%table
+  %tr
+    %th Name
+    %th Status
+    %th Category
+    %th User
+    %th Note
+    %th Activityable
+    %th Activityable type
+    %th Time
+    %th Person
+    %th
+    %th
+    %th
+
+  - @crm_activities.each do |crm_activity|
+    %tr
+      %td= crm_activity.name
+      %td= crm_activity.status_id
+      %td= crm_activity.category_id
+      %td= crm_activity.user
+      %td= crm_activity.note
+      %td= crm_activity.activityable_id
+      %td= crm_activity.activityable_type
+      %td= crm_activity.time
+      %td= crm_activity.person_id
+      %td= link_to 'Show', crm_activity
+      %td= link_to 'Edit', edit_crm_activity_path(crm_activity)
+      %td= link_to 'Destroy', crm_activity, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Activity', new_crm_activity_path

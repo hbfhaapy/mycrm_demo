@@ -1,0 +1,22 @@
+= form_for @smartfinder do |f|
+  - if @smartfinder.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@smartfinder.errors.count, "error")} prohibited this smartfinder from being saved:"
+      %ul
+        - @smartfinder.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :url
+    = f.text_field :url
+  .field
+    = f.label :klass
+    = f.text_field :klass
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :user
+    = f.text_field :user
+  .actions
+    = f.submit 'Save'

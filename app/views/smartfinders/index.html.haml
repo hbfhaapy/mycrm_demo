@@ -1,0 +1,25 @@
+%h1 Listing smartfinders
+
+%table
+  %tr
+    %th Url
+    %th Klass
+    %th Name
+    %th User
+    %th
+    %th
+    %th
+
+  - @smartfinders.each do |smartfinder|
+    %tr
+      %td= smartfinder.url
+      %td= smartfinder.klass
+      %td= smartfinder.name
+      %td= smartfinder.user
+      %td= link_to 'Show', smartfinder
+      %td= link_to 'Edit', edit_smartfinder_path(smartfinder)
+      %td= link_to 'Destroy', smartfinder, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Smartfinder', new_smartfinder_path

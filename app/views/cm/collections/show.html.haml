@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @cm_collection.name
+%p
+  %b Percent:
+  = @cm_collection.percent
+%p
+  %b Time:
+  = @cm_collection.time
+%p
+  %b Contact:
+  = @cm_collection.contact_id
+%p
+  %b User:
+  = @cm_collection.user_id
+
+= link_to 'Edit', edit_cm_collection_path(@cm_collection)
+\|
+= link_to 'Back', cm_collections_path

@@ -1,0 +1,40 @@
+= form_for @cm_contract do |f|
+  - if @cm_contract.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@cm_contract.errors.count, "error")} prohibited this cm_contract from being saved:"
+      %ul
+        - @cm_contract.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :amount
+    = f.text_field :amount
+  .field
+    = f.label :actual_amount
+    = f.text_field :actual_amount
+  .field
+    = f.label :status_id
+    = f.number_field :status_id
+  .field
+    = f.label :agent_id
+    = f.number_field :agent_id
+  .field
+    = f.label :signed_at
+    = f.datetime_select :signed_at
+  .field
+    = f.label :started_at
+    = f.datetime_select :started_at
+  .field
+    = f.label :company_id
+    = f.number_field :company_id
+  .field
+    = f.label :plan_id
+    = f.number_field :plan_id
+  .field
+    = f.label :user
+    = f.text_field :user
+  .actions
+    = f.submit 'Save'

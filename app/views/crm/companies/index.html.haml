@@ -1,0 +1,31 @@
+%h1 Listing crm_companies
+
+%table
+  %tr
+    %th Name
+    %th Category
+    %th Zipcode
+    %th Mail
+    %th Note
+    %th Image
+    %th User
+    %th
+    %th
+    %th
+
+  - @crm_companies.each do |crm_company|
+    %tr
+      %td= crm_company.name
+      %td= crm_company.category
+      %td= crm_company.zipcode
+      %td= crm_company.mail
+      %td= crm_company.note
+      %td= crm_company.image
+      %td= crm_company.user
+      %td= link_to 'Show', crm_company
+      %td= link_to 'Edit', edit_crm_company_path(crm_company)
+      %td= link_to 'Destroy', crm_company, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Company', new_crm_company_path

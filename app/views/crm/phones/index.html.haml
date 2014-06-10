@@ -1,0 +1,25 @@
+%h1 Listing crm_phones
+
+%table
+  %tr
+    %th Klass
+    %th Number
+    %th Phoneable
+    %th Phoneable type
+    %th
+    %th
+    %th
+
+  - @crm_phones.each do |crm_phone|
+    %tr
+      %td= crm_phone.klass_id
+      %td= crm_phone.number
+      %td= crm_phone.phoneable_id
+      %td= crm_phone.phoneable_type
+      %td= link_to 'Show', crm_phone
+      %td= link_to 'Edit', edit_crm_phone_path(crm_phone)
+      %td= link_to 'Destroy', crm_phone, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Phone', new_crm_phone_path

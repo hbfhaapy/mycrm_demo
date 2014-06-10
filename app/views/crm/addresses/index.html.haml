@@ -1,0 +1,23 @@
+%h1 Listing crm_addresses
+
+%table
+  %tr
+    %th Content
+    %th Addressable
+    %th Addressable type
+    %th
+    %th
+    %th
+
+  - @crm_addresses.each do |crm_address|
+    %tr
+      %td= crm_address.content
+      %td= crm_address.addressable_id
+      %td= crm_address.addressable_type
+      %td= link_to 'Show', crm_address
+      %td= link_to 'Edit', edit_crm_address_path(crm_address)
+      %td= link_to 'Destroy', crm_address, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Address', new_crm_address_path

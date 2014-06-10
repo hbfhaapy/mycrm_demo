@@ -1,0 +1,27 @@
+%h1 Listing cm_collections
+
+%table
+  %tr
+    %th Name
+    %th Percent
+    %th Time
+    %th Contact
+    %th User
+    %th
+    %th
+    %th
+
+  - @cm_collections.each do |cm_collection|
+    %tr
+      %td= cm_collection.name
+      %td= cm_collection.percent
+      %td= cm_collection.time
+      %td= cm_collection.contact_id
+      %td= cm_collection.user_id
+      %td= link_to 'Show', cm_collection
+      %td= link_to 'Edit', edit_cm_collection_path(cm_collection)
+      %td= link_to 'Destroy', cm_collection, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Collection', new_cm_collection_path

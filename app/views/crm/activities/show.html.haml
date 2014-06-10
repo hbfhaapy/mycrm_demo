@@ -1,0 +1,33 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @crm_activity.name
+%p
+  %b Status:
+  = @crm_activity.status_id
+%p
+  %b Category:
+  = @crm_activity.category_id
+%p
+  %b User:
+  = @crm_activity.user
+%p
+  %b Note:
+  = @crm_activity.note
+%p
+  %b Activityable:
+  = @crm_activity.activityable_id
+%p
+  %b Activityable type:
+  = @crm_activity.activityable_type
+%p
+  %b Time:
+  = @crm_activity.time
+%p
+  %b Person:
+  = @crm_activity.person_id
+
+= link_to 'Edit', edit_crm_activity_path(@crm_activity)
+\|
+= link_to 'Back', crm_activities_path

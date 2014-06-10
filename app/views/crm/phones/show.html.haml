@@ -1,0 +1,18 @@
+%p#notice= notice
+
+%p
+  %b Klass:
+  = @crm_phone.klass_id
+%p
+  %b Number:
+  = @crm_phone.number
+%p
+  %b Phoneable:
+  = @crm_phone.phoneable_id
+%p
+  %b Phoneable type:
+  = @crm_phone.phoneable_type
+
+= link_to 'Edit', edit_crm_phone_path(@crm_phone)
+\|
+= link_to 'Back', crm_phones_path

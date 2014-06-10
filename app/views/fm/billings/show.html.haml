@@ -1,0 +1,24 @@
+%p#notice= notice
+
+%p
+  %b Amount:
+  = @fm_billing.amount
+%p
+  %b Time:
+  = @fm_billing.time
+%p
+  %b Manager:
+  = @fm_billing.manager_id
+%p
+  %b Company:
+  = @fm_billing.company_id
+%p
+  %b Collection:
+  = @fm_billing.collection_id
+%p
+  %b User:
+  = @fm_billing.user
+
+= link_to 'Edit', edit_fm_billing_path(@fm_billing)
+\|
+= link_to 'Back', fm_billings_path

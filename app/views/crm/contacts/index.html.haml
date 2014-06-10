@@ -1,0 +1,39 @@
+%h1 Listing crm_contacts
+
+%table
+  %tr
+    %th Name
+    %th Category
+    %th Company
+    %th User
+    %th Mail
+    %th Qq
+    %th Msn
+    %th Job
+    %th Note
+    %th Image
+    %th Status
+    %th
+    %th
+    %th
+
+  - @crm_contacts.each do |crm_contact|
+    %tr
+      %td= crm_contact.name
+      %td= crm_contact.category_id
+      %td= crm_contact.company_id
+      %td= crm_contact.user
+      %td= crm_contact.mail
+      %td= crm_contact.qq
+      %td= crm_contact.msn
+      %td= crm_contact.job
+      %td= crm_contact.note
+      %td= crm_contact.image
+      %td= crm_contact.status_id
+      %td= link_to 'Show', crm_contact
+      %td= link_to 'Edit', edit_crm_contact_path(crm_contact)
+      %td= link_to 'Destroy', crm_contact, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Contact', new_crm_contact_path

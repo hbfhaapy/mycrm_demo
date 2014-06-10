@@ -1,0 +1,2 @@
+module Fm::IncomesHelper
+end

@@ -1,0 +1,36 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @cm_contract.name
+%p
+  %b Amount:
+  = @cm_contract.amount
+%p
+  %b Actual amount:
+  = @cm_contract.actual_amount
+%p
+  %b Status:
+  = @cm_contract.status_id
+%p
+  %b Agent:
+  = @cm_contract.agent_id
+%p
+  %b Signed at:
+  = @cm_contract.signed_at
+%p
+  %b Started at:
+  = @cm_contract.started_at
+%p
+  %b Company:
+  = @cm_contract.company_id
+%p
+  %b Plan:
+  = @cm_contract.plan_id
+%p
+  %b User:
+  = @cm_contract.user
+
+= link_to 'Edit', edit_cm_contract_path(@cm_contract)
+\|
+= link_to 'Back', cm_contracts_path
