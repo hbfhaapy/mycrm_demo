@@ -4,7 +4,7 @@
   %td= link_to user.username, user
   %td= user.email
   %td= user_org_tag(user)
-  %td= user_checking_level_tag(user)
+  %td= link_to "Edit", edit_user_path(user), class: "btn btn-warning btn-xs"
   / %td
   /   - if can? :manage, user
   /     = link_to "编辑", edit_user_path(user), class: "btn btn-warning btn-xs"

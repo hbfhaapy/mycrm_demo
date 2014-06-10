@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   #修改密码  
   match "users/update_password/:id" => 'users#update_password', :as => :change_password, via: [:get, :patch]
 
-  get "users/add" => "users#add"
+  post "users/add" => "users#add"
 
   resources :users 
 

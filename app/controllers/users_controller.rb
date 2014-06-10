@@ -15,7 +15,7 @@ class UsersController < ApplicationController
   end
 
   def add
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     @user.password = "11111111"
 
     respond_to do |format|   
@@ -50,6 +50,7 @@ class UsersController < ApplicationController
       redirect_to :back, notice: 'the length of password is too short.'
     else
       @user = User.find(params[:id])
+      debugger
       if @user.update_attributes(user_params)
         redirect_to root_path, notice: '密码修改成功'
       else
@@ -60,6 +61,6 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:username, :email, :password, :password_confirmation)
+      params.require(:user).permit(:username, :email, :password, :password_confirmation, :avatar)
     end
 end

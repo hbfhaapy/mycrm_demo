@@ -2,32 +2,6 @@ source 'https://rubygems.org'
 
 ruby '2.1.2'
 
-# authenticate
-gem 'devise'
-gem 'rolify'
-gem 'cancan'
-
-# ui
-gem 'bootstrap-sass'
-
-# form
-gem 'simple_form'
-gem "nested_form" #子表单
-
-# haml 
-gem 'haml'
-gem 'haml-rails'
-
-# upload files
-gem "carrierwave"
-gem "mini_magick"
-
-#search
-gem "ransack" #字段搜索及排序
-
-#日期排序
-gem 'by_star', :git => "git://github.com/radar/by_star"
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.1'
 # Use mysql as the database for Active Record
@@ -65,3 +39,26 @@ gem 'spring',        group: :development
 # Use debugger
 gem 'debugger2', group: [:development, :test]
 
+
+# authenticate
+gem 'devise'
+gem 'rolify'
+gem 'cancan'
+# ui
+gem 'bootstrap-sass'
+# page
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+# form
+gem 'simple_form'
+gem "nested_form" #子表单
+# haml 
+gem 'haml'
+gem 'haml-rails'
+# upload files
+gem "carrierwave"
+gem "mini_magick"
+#search
+gem "ransack" #字段搜索及排序
+#日期排序
+gem 'by_star', :git => "git://github.com/radar/by_star"
