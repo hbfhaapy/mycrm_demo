@@ -1,0 +1,12 @@
+$(".ajax-status-box").fadeOut(200);
+
+Messenger.options = {
+  extraClasses: 'messenger-fixed messenger-on-top messenger-on-center',
+  theme: 'flat'
+}
+Messenger().post({
+  message: "<%= errors.full_messages.join(',') %>",
+  type: 'error',
+  hideAfter: 5,
+  showCloseButton: true
+});

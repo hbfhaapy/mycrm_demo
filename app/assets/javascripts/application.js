@@ -15,8 +15,11 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+//= require messenger
+//= require messenger-theme-future
 //= require bootstrap
 //= require jquery_nested_form
 //= require jquery.ui.nestedSortable
 //= require sortable_tree/initializer
 //= require selectize
+

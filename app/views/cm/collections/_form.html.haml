@@ -1,25 +1,29 @@
-= form_for @cm_collection do |f|
-  - if @cm_collection.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@cm_collection.errors.count, "error")} prohibited this cm_collection from being saved:"
-      %ul
-        - @cm_collection.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :percent
-    = f.datetime_select :percent
-  .field
-    = f.label :time
-    = f.datetime_select :time
-  .field
-    = f.label :contact_id
-    = f.number_field :contact_id
-  .field
-    = f.label :user_id
-    = f.text_field :user_id
-  .actions
-    = f.submit 'Save'
+.alert.alert-warning.form-inline
+  - if params[:action] == "new"
+    %a.close{"aria-hidden" => "true", "data-dismiss" => "alert", :href => "#"} &times;
+  = simple_form_for(@cm_collection, remote: true) do |f|
+    - if params[:action] == "new"
+      .form-group
+        = f.input :name, label: false, placeholder: "名称", input_html: { class: "form-control" }
+      .form-group
+        = f.input :percent, label: false, placeholder: "比例", input_html: { class: "form-control amount-percent", value: cm_current_amount_tag(@cm_collection, 'percent') }
+      \%
+      .form-group
+        %input.form-control.amount-number{:disabled => "true", :placeholder => "金额", :type => "number", :value => cm_current_amount_tag(@cm_collection, 'number')}/
+      元
+    - elsif params[:action] == "edit"
+      .form-group
+        = f.input :name, label: false, placeholder: "名称", input_html: { class: "form-control" }
+      .form-group
+        = f.input :percent, label: false, placeholder: "比例", input_html: { class: "form-control amount-percent", value: @cm_collection.percent }
+      \%
+      .form-group
+        %input.form-control.amount-number{:disabled => "true", :placeholder => "金额", :type => "float", :value => (@cm_collection.contract.amount/100*@cm_collection.percent).round(2)}/
+      元
+    .form-group
+      - if params[:action] == "new"
+        = f.text_field :time, value: Time.now.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+      - elsif params[:action] == "edit"
+        = f.text_field :time, value: @cm_collection.time.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+    = f.hidden_field :contract_id, value: @cm_collection.contract_id
+    = f.submit "提交", class: "btn btn-success"

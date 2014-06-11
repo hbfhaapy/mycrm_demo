@@ -1,0 +1,22 @@
+.panel.panel-default.deals
+  .panel-heading.clearfix
+    %h3.pull-left
+      商机
+      %span.red= object.deals.accessible_by(current_ability).count
+    = link_to "新增商机", new_crm_deal_path(contact_id: params[:id]), remote: true, class: "btn btn-primary pull-right"
+  .ajax-form
+  %table.table.table-striped.table-hover
+    %thead
+      %th 金额
+      %th 名称
+      %th 状态
+      %th 分类
+      %th 最新活动
+      %th 预计成交于
+      %th 更新于
+      %th 操作
+    %tbody
+      - object.deals.accessible_by(current_ability).page(params[:page]).order("updated_at DESC").each do |deal|
+        = render partial: "crm/deals/deal", locals: { deal: deal }
+.text-center
+  = paginate object.deals.accessible_by(current_ability).page(params[:page]), { :params => { :controller => params[:controller], :action => "show", children: "deals" } }

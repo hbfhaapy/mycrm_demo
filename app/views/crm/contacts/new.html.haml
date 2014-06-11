@@ -1,5 +1,4 @@
-%h1 New crm_contact
-
+%h1.clearfix
+  新增联系人
+  \#{link_to '返回', crm_contacts_path, class: "btn btn-default pull-right"}
 = render 'form'
-
-= link_to 'Back', crm_contacts_path

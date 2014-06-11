@@ -1,40 +1,65 @@
-= form_for @cm_contract do |f|
+= simple_form_for(@cm_contract) do |f|
   - if @cm_contract.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@cm_contract.errors.count, "error")} prohibited this cm_contract from being saved:"
+      %h2
+        = pluralize(@cm_contract.errors.count, "error")
+        prohibited this cm_contract from being saved:
       %ul
         - @cm_contract.errors.full_messages.each do |msg|
           %li= msg
-
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :amount
-    = f.text_field :amount
-  .field
-    = f.label :actual_amount
-    = f.text_field :actual_amount
-  .field
-    = f.label :status_id
-    = f.number_field :status_id
-  .field
-    = f.label :agent_id
-    = f.number_field :agent_id
-  .field
-    = f.label :signed_at
-    = f.datetime_select :signed_at
-  .field
-    = f.label :started_at
-    = f.datetime_select :started_at
-  .field
-    = f.label :company_id
-    = f.number_field :company_id
-  .field
-    = f.label :plan_id
-    = f.number_field :plan_id
-  .field
-    = f.label :user
-    = f.text_field :user
-  .actions
-    = f.submit 'Save'
+  .row
+    .col-md-2
+      .form-group
+        = f.input :name, label: "名称", input_html: { class: 'form-control' }
+  .row
+    .col-md-2
+      .form-group
+        = f.association :status, label: "状态", input_html: { class: "form-control" }
+  .row
+    .col-md-2
+      .form-group
+        = f.input :amount, label: "金额", input_html: { class: 'form-control' }
+    .col-md-2
+      .form-group
+        = f.input :actual_amount, label: "结算金额", input_html: { class: 'form-control' }
+  .row
+    .col-md-2
+      .form-group
+        %label.select.required{:for => "cm_contract_signed_at"}
+          %abbr{:title => "required"} *
+          签订时间
+        - if params[:action] == "new"
+          = f.text_field :signed_at, value: Time.now.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+        - elsif params[:action] == "edit"
+          = f.text_field :signed_at, value: @cm_contract.signed_at.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+    .col-md-2
+      .form-group
+        %label.select.required{:for => "cm_contract_started_at"}
+          %abbr{:title => "required"} *
+          服务开始时间
+        - if params[:action] == "new"
+          = f.text_field :started_at, class: "datepicker form-control", required: "required"
+        - elsif params[:action] == "edit"
+          = f.text_field :started_at, value: @cm_contract.started_at.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+    .col-md-2
+      .form-group
+        %label.select.required{:for => "cm_contract_ended_at"}
+          %abbr{:title => "required"} *
+          服务结束时间
+        - if params[:action] == "new"
+          = f.text_field :ended_at, class: "datepicker form-control", required: "required"
+        - elsif params[:action] == "edit"
+          = f.text_field :ended_at, value: @cm_contract.ended_at.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+  .row
+    .col-md-2
+      .form-group
+        = f.association :plan, label: '项目', input_html: { class: "form-control", id: "select-plan", placeholder: '选择项目' }
+  .row
+    .col-md-2
+      .form-group
+        = f.association :company, label: '公司', input_html: { class: "form-control", id: "select-company", placeholder: '选择公司' }
+  .row
+    .col-md-2
+      .form-group
+        = f.association :agent, label: '代理人', label_method: :username, value_method: :id, input_html: { class: "form-control", id: "select-agent", placeholder: '选择代理人' }
+  = f.submit "确认提交", class: "btn btn-success btn-lg"

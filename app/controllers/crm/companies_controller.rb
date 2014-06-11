@@ -1,20 +1,38 @@
 class Crm::CompaniesController < ApplicationController
+  load_and_authorize_resource :class => "Crm::Company"
   before_action :set_crm_company, only: [:show, :edit, :update, :destroy]
+  def advanced_search
+    @search = Crm::Company.search(params[:q])
+    @search.build_grouping unless @search.groupings.any?
+    @crm_companies  = params[:distinct].to_i.zero? ? @search.result : @search.result(distinct: true)
+
+    respond_with @crm_companies
+  end
 
   # GET /crm/companies
   # GET /crm/companies.json
   def index
-    @crm_companies = Crm::Company.all
+    @q = Crm::Company.accessible_by(current_ability).includes(:category, :contacts, :addresses, [:phones => :klass]).order("updated_at DESC").search(params[:q])
+    @crm_companies = @q.result(:distinct => true).page(params[:page])
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @crm_companies }
+    end
   end
 
   # GET /crm/companies/1
   # GET /crm/companies/1.json
   def show
+    @crm_company = Crm::Company.includes(:contracts => :status, :phones => :klass, :deals => [:status, :category, :contact], :contacts => [:status, :category, :addresses, :phones => :klass]).find(params[:id])
+    @chart = @crm_company.basic_line_chart
   end
 
   # GET /crm/companies/new
+  # GET /crm/companies/new.json
   def new
     @crm_company = Crm::Company.new
+    phones = @crm_company.phones.new
+    addresses = @crm_company.addresses.new
   end
 
   # GET /crm/companies/1/edit
@@ -24,29 +42,29 @@ class Crm::CompaniesController < ApplicationController
   # POST /crm/companies
   # POST /crm/companies.json
   def create
-    @crm_company = Crm::Company.new(crm_company_params)
-
-    respond_to do |format|
+    @crm_company = Crm::Company.new crm_company_params
+    @crm_company.user_id = current_user.id
+    respond_to do |f|
       if @crm_company.save
-        format.html { redirect_to @crm_company, notice: 'Company was successfully created.' }
-        format.json { render :show, status: :created, location: @crm_company }
+        f.html { redirect_to @crm_company, notice: '客户信息创建成功' }
+        f.json { render json: @crm_company, status: :created, location: @crm_company }
       else
-        format.html { render :new }
-        format.json { render json: @crm_company.errors, status: :unprocessable_entity }
+        f.html { render action: "new" }
+        f.json { render json: @crm_company.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /crm/companies/1
-  # PATCH/PUT /crm/companies/1.json
+  # PUT /crm/companies/1
+  # PUT /crm/companies/1.json
   def update
-    respond_to do |format|
-      if @crm_company.update(crm_company_params)
-        format.html { redirect_to @crm_company, notice: 'Company was successfully updated.' }
-        format.json { render :show, status: :ok, location: @crm_company }
+    respond_to do |f|
+      if @crm_company.update crm_company_params
+        f.html { redirect_to @crm_company, notice: '客户信息更新成功' }
+        f.json { head :no_content }
       else
-        format.html { render :edit }
-        format.json { render json: @crm_company.errors, status: :unprocessable_entity }
+        f.html { render action: "edit" }
+        f.json { render json: @crm_company.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -55,20 +73,18 @@ class Crm::CompaniesController < ApplicationController
   # DELETE /crm/companies/1.json
   def destroy
     @crm_company.destroy
-    respond_to do |format|
-      format.html { redirect_to crm_companies_url, notice: 'Company was successfully destroyed.' }
-      format.json { head :no_content }
+    respond_to do |f|
+      f.html { redirect_to crm_companies_url }
+      f.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_crm_company
-      @crm_company = Crm::Company.find(params[:id])
+      @crm_company = Crm::Company.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def crm_company_params
-      params.require(:crm_company).permit(:name, :category_id, :zipcode, :mail, :note, :image, :user_id)
+      params.require(:crm_company).permit(:category_id, :image, :mail, :name, :note, :zipcode, :contacts_count, :deals_count, :phones_attributes, :addresses_attributes)
     end
 end

@@ -1,0 +1,8 @@
+%tr{:id => "role-#{role.id}"}
+  %td.form-group.w320
+    = simple_form_for role, remote: true do |f|
+      = f.input :name, label: false, input_html: { class: "form-control real-text-input" }
+  %td= role.id
+  %td
+    - if can? :destroy, role
+      = link_to '删除', role, method: :delete, data: { confirm: '确定删除?' }, remote: true, class: "btn btn-xs btn-danger"

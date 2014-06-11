@@ -1,0 +1,1 @@
+$("#collection-<%= @cm_collection.id %>").html('<%= escape_javascript(render partial: "cm/collections/collection_td", locals: { collection: @cm_collection }) %>');

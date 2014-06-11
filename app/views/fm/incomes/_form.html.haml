@@ -1,28 +1,16 @@
-= form_for @fm_income do |f|
-  - if @fm_income.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@fm_income.errors.count, "error")} prohibited this fm_income from being saved:"
-      %ul
-        - @fm_income.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :amount
-    = f.text_field :amount
-  .field
-    = f.label :time
-    = f.datetime_select :time
-  .field
-    = f.label :note
-    = f.text_field :note
-  .field
-    = f.label :collection_id
-    = f.number_field :collection_id
-  .field
-    = f.label :company_id
-    = f.number_field :company_id
-  .field
-    = f.label :user
-    = f.text_field :user
-  .actions
-    = f.submit 'Save'
+.alert.alert-warning.form-inline
+  %a.close{"aria-hidden" => "true", "data-dismiss" => "alert", :href => "#"} &times;
+  = simple_form_for(@fm_income, remote: true) do |f|
+    .form-group
+      = f.input :amount, label: false, input_html: { class: "form-control", placeholder: "金额" }
+    .form-group
+      - if params[:action] == "new"
+        = f.text_field :time, value: Time.now.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+      - elsif params[:action] == "edit"
+        = f.text_field :time, value: @fm_income.time.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+    .form-group
+      = f.association :company, label: false, input_html: { id: "select-company", class: "form-control", placeholder: "选择客户" }
+    .form-group
+      = f.input :note, label: false, input_html: { class: "form-control", placeholder: "备注" }
+    = f.hidden_field :collection_id, value: @fm_income.collection_id
+    = f.submit "提交", class: "btn btn-success"

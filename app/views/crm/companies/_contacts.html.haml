@@ -1,0 +1,20 @@
+.panel.panel-default
+  .panel-heading
+    %h3
+      联系人
+      %span.red= company.contacts.accessible_by(current_ability).count
+  %table.table.table-striped.table-hover
+    %thead
+      %th 名称
+      %th 状态
+      %th 类型
+      %th 最新商机
+      %th 最新活动
+      %th QQ
+      %th 电话
+      %th 更新于
+    %tbody
+      - company.contacts.accessible_by(current_ability).page(params[:page]).order("updated_at DESC").each do |contact|
+        = render partial: "crm/contacts/contact", locals: { contact: contact }
+.text-center
+  = paginate company.contacts.accessible_by(current_ability).page(params[:page]), { :params => { :controller => params[:controller], :action => "show", children: "contacts" } }

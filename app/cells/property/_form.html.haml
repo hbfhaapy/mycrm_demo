@@ -1,0 +1,7 @@
+%tr{id: "property-#{property.id}"}
+  %td.form-group
+    =simple_form_for(property, remote: true) do |f|
+      = f.input :name, label: false, input_html: { class: "form-control real-text-input",autofocus: true, placeholder: "Name" }
+  %td
+    - if property
+      = link_to "Delete", property, method: :delete, data: { confirm: "Are you sure?" }, remote: true, class: "btn btn-xs btn-danger"

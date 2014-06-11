@@ -1,31 +1,46 @@
-%h1 Listing crm_companies
-
-%table
-  %tr
-    %th Name
-    %th Category
-    %th Zipcode
-    %th Mail
-    %th Note
-    %th Image
-    %th User
-    %th
-    %th
-    %th
-
-  - @crm_companies.each do |crm_company|
-    %tr
-      %td= crm_company.name
-      %td= crm_company.category
-      %td= crm_company.zipcode
-      %td= crm_company.mail
-      %td= crm_company.note
-      %td= crm_company.image
-      %td= crm_company.user
-      %td= link_to 'Show', crm_company
-      %td= link_to 'Edit', edit_crm_company_path(crm_company)
-      %td= link_to 'Destroy', crm_company, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Company', new_crm_company_path
+%h1.clearfix
+  客户
+  \#{all_count_tag @crm_companies}
+  \#{link_to '新增客户', new_crm_company_path, class: "btn btn-primary pull-right"}
+  \#{render_cell :smartfinders, :form, klass: "客户", smartfinder: Smartfinder.new}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :name_cont, class:"form-control input-sm", placeholder: "名称"
+    .form-group
+      = f.select :category_id_eq, options_from_collection_for_select(Crm::Company::Category.all, "id", "name", @q.category_id_eq), { :prompt => "类型"}, { class: "form-control input-sm" }
+    .form-group
+      = f.text_field :contacts_count_gteq, class:"form-control input-sm", placeholder: ">=联系人数"
+    .form-group
+      = f.text_field :contacts_count_lteq, class:"form-control input-sm", placeholder: "<=联系人数"
+    .form-group
+      = f.text_field :deals_count_gteq, class:"form-control input-sm", placeholder: ">=商机数"
+    .form-group
+      = f.text_field :deals_count_lteq, class:"form-control input-sm", placeholder: "<=商机数"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.table-striped.table-hover
+  %thead
+    %th= sort_link @q, :name, "名称", {}, :method => action_name == 'companies_advanced_search' ? :post : :get
+    %th 类型
+    %th= sort_link @q, :contacts_count, "联系人", {}, :method => action_name == 'companies_advanced_search' ? :post : :get
+    %th 电话
+    %th 地址
+    %th 操作
+  %tbody
+    - @crm_companies.each do |crm_company|
+      %tr
+        %td
+          = image_tag crm_company.image.url(:mini) if crm_company.image?
+          = link_to crm_company.name, crm_company
+        %td= crm_company.category.name
+        %td= link_to crm_company.contacts_count, crm_company, class: "label label-gray label-success" if crm_company.contacts.present?
+        %td
+          = phones_tag crm_company.phones
+        %td
+          = addresses_tag crm_company.addresses
+        %td
+          - if can? :manage, crm_company
+            = link_to '编辑', edit_crm_company_path(crm_company), class: "btn btn-warning btn-xs"
+            = link_to '删除', crm_company, method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs"
+.text-center
+  = render partial: "layouts/page", locals: { objects: @crm_companies }

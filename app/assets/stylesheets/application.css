@@ -19,4 +19,7 @@
  *= require jquery.ui.all
  *= require selectize
  *= require selectize.default
+ *= require messenger
+ *= require messenger-spinner
+ *= require messenger-theme-future
  */

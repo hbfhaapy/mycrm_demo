@@ -1,39 +1,35 @@
-%h1 Listing crm_contacts
-
-%table
-  %tr
-    %th Name
-    %th Category
-    %th Company
-    %th User
-    %th Mail
-    %th Qq
-    %th Msn
-    %th Job
-    %th Note
-    %th Image
-    %th Status
-    %th
-    %th
-    %th
-
-  - @crm_contacts.each do |crm_contact|
-    %tr
-      %td= crm_contact.name
-      %td= crm_contact.category_id
-      %td= crm_contact.company_id
-      %td= crm_contact.user
-      %td= crm_contact.mail
-      %td= crm_contact.qq
-      %td= crm_contact.msn
-      %td= crm_contact.job
-      %td= crm_contact.note
-      %td= crm_contact.image
-      %td= crm_contact.status_id
-      %td= link_to 'Show', crm_contact
-      %td= link_to 'Edit', edit_crm_contact_path(crm_contact)
-      %td= link_to 'Destroy', crm_contact, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Contact', new_crm_contact_path
+%h1.clearfix
+  联系人
+  \#{all_count_tag @crm_contacts}
+  \#{link_to '新增联系人', new_crm_contact_path, class: "btn btn-primary pull-right"}
+  \#{render_cell :smartfinders, :form, klass: "联系人", smartfinder: Smartfinder.new}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :name_cont, class:"form-control input-sm", placeholder: "姓名"
+    .form-group
+      = f.select :status_id_eq, options_from_collection_for_select(Crm::Contact::Status.all, "id", "name", @q.status_id_eq), { :prompt => "状态"}, { class: "form-control input-sm" }
+    .form-group
+      = f.select :category_id_eq, options_from_collection_for_select(Crm::Contact::Category.all, "id", "name", @q.category_id_eq), { :prompt => "类型"}, { class: "form-control input-sm" }
+    .form-group
+      = f.text_field :deals_count_gteq, class:"form-control input-sm", placeholder: ">=商机数量"
+    .form-group
+      = f.text_field :deals_count_lteq, class:"form-control input-sm", placeholder: "<=商机数量"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.table-striped.table-hover
+  %thead
+    %th= sort_link @q, :name, "名称", {}, :method => action_name == 'contacts_advanced_search' ? :post : :get
+    %th 状态
+    %th 类型
+    %th 最新商机
+    %th 最新活动
+    %th 所属公司
+    %th QQ
+    %th 电话
+    %th= sort_link @q, :updated_at, "更新于", {}, :method => action_name == 'contacts_advanced_search' ? :post : :get
+    %th 操作
+  %tbody
+    - @crm_contacts.each do |contact|
+      = render partial: "crm/contacts/contact", locals: { contact: contact }
+.text-center
+  = render partial: "layouts/page", locals: { objects: @crm_contacts }

@@ -1,0 +1,4 @@
+.clearfix.mb1
+  %h4.pull-left 属性名称
+  = link_to "新增属性", new_crm_contact_category_path, class: "btn btn-primary pull-right", remote: true
+= render partial: "index", locals: { properties: @properties }

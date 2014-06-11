@@ -1,0 +1,5 @@
+$('#pricelist').modal('show');
+$("#pricelist .modal-body").html('<%= escape_javascript(render partial: "crm/deal/pricelists/show", locals: { pricelist: @crm_deal_pricelist }) %>');
+$("#pricelist .modal-title").html("报价单#<%= @crm_deal_pricelist.id %>")
+
+defaultInit();

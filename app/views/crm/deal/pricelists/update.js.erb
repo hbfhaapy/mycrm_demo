@@ -1,0 +1,2 @@
+$("#pricelist-<%= @crm_deal_pricelist.id %> .price").html('<%= escape_javascript(number_to_currency((@crm_deal_pricelist.content["overall"]["price"] + @crm_deal_pricelist.content["plan"]["price"] + @crm_deal_pricelist.content["implement"]["price"]), unit: "")) %>' + "元");
+console.log(<%= number_to_currency((@crm_deal_pricelist.content["overall"]["price"] + @crm_deal_pricelist.content["plan"]["price"] + @crm_deal_pricelist.content["implement"]["price"]), unit: "") %>);

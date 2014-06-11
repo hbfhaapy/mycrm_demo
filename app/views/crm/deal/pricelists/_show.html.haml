@@ -1,0 +1,184 @@
+= simple_form_for(pricelist, remote: true) do |f|
+  - if can? :manage, pricelist
+    = f.hidden_field :content
+    .alert.alert-warning
+      = f.input :dealed, label: "成交"
+  - else
+    :javascript
+      $(function(){
+        $(".edit-input").attr("disabled", true);
+      });
+  %table#main-table.table.table-bordered
+    %thead
+  %th{:colspan => "4"}= pricelist.content["name"]
+  %tbody
+    %tr.active
+      %td 阶段
+      %td 费用合计(元)
+    %tr
+      %td 总计规划
+      %td#overall-price.orange
+        = pricelist.content["overall"]["price"]
+    %tr
+      %td 单体方案
+      %td#plan-price.orange
+        = pricelist.content["plan"]["price"]
+    %tr
+      %td.red 总计
+      %td#front-total-price.red
+        = pricelist.content["overall"]["price"] + pricelist.content["plan"]["price"]
+    %tr
+      %td 施工图设计
+      %td#implement-price.orange
+        = pricelist.content["implement"]["price"]
+    %tr
+      %td.red 总计
+      %td#all-total-price.red
+        = pricelist.content["overall"]["price"] + pricelist.content["plan"]["price"] + pricelist.content["implement"]["price"]
+  %table#overall-table.table.table-bordered
+    %thead
+  %th{:colspan => "4"}
+    = pricelist.content["overall"]["name"]
+  %tbody
+    %tr.active
+      %td{:rowspan => "2"}
+      %td{:rowspan => "2"} 面积(M2)
+      %td{:colspan => "2"} 费用
+    %tr.active
+      %td 单价(元/M2)
+      %td 小计(元)
+    %tr
+      %td
+        = pricelist.content["overall"]["l1"]["name"]
+      %td
+        %input.edit-input.pl-area.aaa{:hashname => "[\"overall\"][\"l1\"][\"area\"]", :value => pricelist.content["overall"]["l1"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"overall\"][\"l1\"][\"unitprice\"]", :value => pricelist.content["overall"]["l1"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"overall\"][\"l1\"][\"price\"]", :value => pricelist.content["overall"]["l1"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["overall"]["l2"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"overall\"][\"l2\"][\"area\"]", :value => pricelist.content["overall"]["l2"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"overall\"][\"l2\"][\"unitprice\"]", :value => pricelist.content["overall"]["l2"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"overall\"][\"l2\"][\"price\"]", :value => pricelist.content["overall"]["l2"]["price"]}/
+    %tr
+      %td.red 合计
+      %td.red
+        %input.edit-input.overall-area.total-area{:disabled => "", :hashname => "[\"overall\"][\"area\"]", :value => pricelist.content["overall"]["area"]}/
+      %td
+      %td.red
+        %input.edit-input.overall-price.total-price{:disabled => "", :hashname => "[\"overall\"][\"price\"]", :value => pricelist.content["overall"]["price"]}/
+  %table#plan-table.table.table-bordered
+    %thead
+  %th{:colspan => "4"}
+    = pricelist.content["plan"]["name"]
+  %tbody
+    %tr.active
+      %td{:rowspan => "2"} 产品类型
+      %td{:rowspan => "2"} 面积(M2)
+      %td{:colspan => "2"} 费用
+    %tr.active
+      %td 单价(元/M2)
+      %td 小计(元)
+    %tr
+      %td
+        = pricelist.content["plan"]["l1"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"plan\"][\"l1\"][\"area\"]", :value => pricelist.content["plan"]["l1"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"plan\"][\"l1\"][\"unitprice\"]", :value => pricelist.content["plan"]["l1"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"plan\"][\"l1\"][\"price\"]", :value => pricelist.content["plan"]["l1"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["plan"]["l2"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"plan\"][\"l2\"][\"area\"]", :value => pricelist.content["plan"]["l2"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"plan\"][\"l2\"][\"unitprice\"]", :value => pricelist.content["plan"]["l2"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"plan\"][\"l2\"][\"price\"]", :value => pricelist.content["plan"]["l2"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["plan"]["l3"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"plan\"][\"l3\"][\"area\"]", :value => pricelist.content["plan"]["l3"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"plan\"][\"l3\"][\"unitprice\"]", :value => pricelist.content["plan"]["l3"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"plan\"][\"l3\"][\"price\"]", :value => pricelist.content["plan"]["l3"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["plan"]["l4"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"plan\"][\"l4\"][\"area\"]", :value => pricelist.content["plan"]["l4"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"plan\"][\"l4\"][\"unitprice\"]", :value => pricelist.content["plan"]["l4"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"plan\"][\"l4\"][\"price\"]", :value => pricelist.content["plan"]["l4"]["price"]}/
+    %tr
+      %td.red 合计
+      %td.red
+        %input.edit-input.plan-price.total-area{:disabled => "", :hashname => "[\"plan\"][\"area\"]", :value => pricelist.content["plan"]["area"]}/
+      %td
+      %td.red
+        %input.edit-input.plan-price.total-price{:disabled => "", :hashname => "[\"plan\"][\"price\"]", :value => pricelist.content["plan"]["price"]}/
+  %table#implement-table.table.table-bordered
+    %thead
+  %th{:colspan => "4"}
+    = pricelist.content["implement"]["name"]
+  %tbody
+    %tr.active
+      %td{:rowspan => "2"} 产品类型
+      %td{:rowspan => "2"} 面积(M2)
+      %td{:colspan => "2"} 费用
+    %tr.active
+      %td 单价(元/M2)
+      %td 小计(元)
+    %tr
+      %td
+        = pricelist.content["implement"]["l1"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"implement\"][\"l1\"][\"area\"]", :value => pricelist.content["implement"]["l1"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"implement\"][\"l1\"][\"unitprice\"]", :value => pricelist.content["implement"]["l1"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"implement\"][\"l1\"][\"price\"]", :value => pricelist.content["implement"]["l1"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["implement"]["l2"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"implement\"][\"l2\"][\"area\"]", :value => pricelist.content["implement"]["l2"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"implement\"][\"l2\"][\"unitprice\"]", :value => pricelist.content["implement"]["l2"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"implement\"][\"l2\"][\"price\"]", :value => pricelist.content["implement"]["l2"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["implement"]["l3"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"implement\"][\"l3\"][\"area\"]", :value => pricelist.content["implement"]["l3"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"implement\"][\"l3\"][\"unitprice\"]", :value => pricelist.content["implement"]["l3"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"implement\"][\"l3\"][\"price\"]", :value => pricelist.content["implement"]["l3"]["price"]}/
+    %tr
+      %td
+        = pricelist.content["implement"]["l4"]["name"]
+      %td
+        %input.edit-input.pl-area{:hashname => "[\"implement\"][\"l4\"][\"area\"]", :value => pricelist.content["implement"]["l4"]["area"]}/
+      %td
+        %input.edit-input.pl-unitprice{:hashname => "[\"implement\"][\"l4\"][\"unitprice\"]", :value => pricelist.content["implement"]["l4"]["unitprice"]}/
+      %td
+        %input.edit-input.pl-price{:disabled => "", :hashname => "[\"implement\"][\"l4\"][\"price\"]", :value => pricelist.content["implement"]["l4"]["price"]}/
+    %tr
+      %td.red 合计
+      %td.red
+        %input.edit-input.implement-area.total-area{:disabled => "", :hashname => "[\"implement\"][\"area\"]", :value => pricelist.content["implement"]["area"]}/
+      %td
+      %td.red
+        %input.edit-input.implement-price.total-price{:disabled => "", :hashname => "[\"implement\"][\"price\"]", :value => pricelist.content["implement"]["price"]}/

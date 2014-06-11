@@ -1,0 +1,1 @@
+$("#deal-<%= @crm_deal.id %>").html('<%= escape_javascript(render partial: "crm/deals/deal_td", locals: { deal: @crm_deal }) %>');

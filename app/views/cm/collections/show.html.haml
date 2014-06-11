@@ -1,21 +1,68 @@
-%p#notice= notice
-
-%p
-  %b Name:
-  = @cm_collection.name
-%p
-  %b Percent:
-  = @cm_collection.percent
-%p
-  %b Time:
-  = @cm_collection.time
-%p
-  %b Contact:
-  = @cm_collection.contact_id
-%p
-  %b User:
-  = @cm_collection.user_id
-
-= link_to 'Edit', edit_cm_collection_path(@cm_collection)
-\|
-= link_to 'Back', cm_collections_path
+= notice_tag notice
+.row
+  .col-md-3
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= @cm_collection.name
+      .panel-body
+        %b 收款比例：
+        = @cm_collection.percent
+        \%
+        %br/
+        %b 金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额：
+        %span.red
+          = number_to_currency((@cm_collection.contract.amount/100*@cm_collection.percent).round(2), unit: "")
+          元
+        %br/
+        %b 到款时间：
+        = @cm_collection.time.strftime "%Y-%m-%d"
+        %br/
+        .row.mt1
+          .col-md-8.col-xs-6= collection_process_tag @cm_collection
+        %b 合同：
+        = link_to @cm_collection.contract.name, @cm_collection.contract
+        %br/
+        %b 合同总金额：
+        = content_tag :span, "#{number_to_currency(@cm_collection.contract.amount, unit: "")}元", class: "red"
+      .panel-footer
+        = link_to '返回', cm_collections_path, class: "btn btn-default"
+  .col-md-9
+    .panel.billings.panel-default
+      .panel-heading.clearfix
+        %h3.pull-left
+          开票
+          %span.red
+            = number_to_currency(@cm_collection.billings.sum("amount"), unit: "")
+            元
+        = link_to "新增开票", new_fm_billing_path(collection_id: params[:id]), remote: true, class: "btn btn-primary pull-right"
+      .ajax-form
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th 实开金额
+            %th 开票时间
+            %th 开票人员
+            %th 操作
+        %tbody
+          - @cm_collection.billings.each do |billing|
+            = render partial: "fm/billings/billing", locals: { billing: billing }
+    .panel.incomes.panel-default
+      .panel-heading.clearfix
+        %h3.pull-left
+          到款
+          %span.green
+            = number_to_currency(@cm_collection.incomes.sum("amount"), unit: "")
+            元
+        = link_to "新增到款", new_fm_income_path(collection_id: params[:id]), remote: true, class: "btn btn-primary pull-right"
+      .ajax-form
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th 金额
+            %th 到款时间
+            %th 客户
+            %th 备注
+            %th 操作
+        %tbody
+          - @cm_collection.incomes.each do |income|
+            = render partial: "fm/incomes/income", locals: { income: income }

@@ -1,20 +1,41 @@
 class Cm::CollectionsController < ApplicationController
+  load_and_authorize_resource :class => "Cm::Collection"
   before_action :set_cm_collection, only: [:show, :edit, :update, :destroy]
+
+  def advanced_search
+    @search = Cm::Collection.search(params[:q])
+    @search.build_grouping unless @search.groupings.any?
+    @cm_collections  = params[:distinct].to_i.zero? ? @search.result : @search.result(distinct: true)
+
+    respond_with @cm_collections
+  end
 
   # GET /cm/collections
   # GET /cm/collections.json
   def index
-    @cm_collections = Cm::Collection.all
+    @q = Cm::Collection.accessible_by(current_ability).includes(:contract => [:company, :plan]).order("created_at DESC").search(params[:q])
+    @cm_collections = @q.result(:distinct => true).page(params[:page])
+
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @cm_collections }
+    end
   end
 
   # GET /cm/collections/1
   # GET /cm/collections/1.json
   def show
+    @cm_collection = Cm::Collection.includes(:incomes => :company, :billings => :manager).find(params[:id])
   end
 
   # GET /cm/collections/new
+  # GET /cm/collections/new.json
   def new
-    @cm_collection = Cm::Collection.new
+    contract = Cm::Contract.find(params[:contract_id])
+    @cm_collection = contract.collections.new
+    respond_to do |f|
+      f.js
+    end
   end
 
   # GET /cm/collections/1/edit
@@ -24,29 +45,26 @@ class Cm::CollectionsController < ApplicationController
   # POST /cm/collections
   # POST /cm/collections.json
   def create
-    @cm_collection = Cm::Collection.new(cm_collection_params)
+    @cm_collection = Cm::Collection.new cm_collection_params
+    @cm_collection.user_id = current_user.id
 
-    respond_to do |format|
+    respond_to do |f|
       if @cm_collection.save
-        format.html { redirect_to @cm_collection, notice: 'Collection was successfully created.' }
-        format.json { render :show, status: :created, location: @cm_collection }
+        f.js
       else
-        format.html { render :new }
-        format.json { render json: @cm_collection.errors, status: :unprocessable_entity }
+        f.js { render :template => 'layouts/error', locals: { errors: @cm_collection.errors } }
       end
     end
   end
 
-  # PATCH/PUT /cm/collections/1
-  # PATCH/PUT /cm/collections/1.json
+  # PUT /cm/collections/1
+  # PUT /cm/collections/1.json
   def update
-    respond_to do |format|
-      if @cm_collection.update(cm_collection_params)
-        format.html { redirect_to @cm_collection, notice: 'Collection was successfully updated.' }
-        format.json { render :show, status: :ok, location: @cm_collection }
+    respond_to do |f|
+      if @cm_collection.update cm_collection_params
+        f.js
       else
-        format.html { render :edit }
-        format.json { render json: @cm_collection.errors, status: :unprocessable_entity }
+        f.js { render :template => 'layouts/error', locals: { errors: @cm_collection.errors } }
       end
     end
   end
@@ -54,21 +72,19 @@ class Cm::CollectionsController < ApplicationController
   # DELETE /cm/collections/1
   # DELETE /cm/collections/1.json
   def destroy
-    @cm_collection.destroy
-    respond_to do |format|
-      format.html { redirect_to cm_collections_url, notice: 'Collection was successfully destroyed.' }
-      format.json { head :no_content }
+    @cm_collction.destroy
+
+    respond_to do |f|
+      f.js
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_cm_collection
-      @cm_collection = Cm::Collection.find(params[:id])
+      @cm_collection = Cm::Collection.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def cm_collection_params
-      params.require(:cm_collection).permit(:name, :percent, :time, :contact_id, :user_id_id)
+      params.require(:cm_collection).permit(:contract_id, :name, :percent, :user_id, :time)
     end
 end

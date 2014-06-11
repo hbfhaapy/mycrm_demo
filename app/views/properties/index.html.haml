@@ -11,11 +11,6 @@
       = link_to "市场活动类型", properties_path(type: "activity_categories"), class: "list-group-item " + active('activity_categories', params[:type])
       = link_to "市场活动状态", properties_path(type: "activity_statuses"), class: "list-group-item " + active('activity_statuses', params[:type])
       = link_to "合同状态", properties_path(type: "contract_statuses"), class: "list-group-item " + active('contract_statuses', params[:type])
-      = link_to "项目类型", properties_path(type: "plan_categories"), class: "list-group-item " + active('plan_categories', params[:type])
-      = link_to "项目状态", properties_path(type: "plan_statuses"), class: "list-group-item " + active('plan_statuses', params[:type])
-      = link_to "项目活动类型", properties_path(type: "projects_activities_categories"), class: "list-group-item " + active('projects_activities_categories', params[:type])
-      = link_to "归档文件类型", properties_path(type: "attachments_categories"), class: "list-group-item " + active('attachments_categories', params[:type])
-      = link_to "OA公告类型", properties_path(type: "oa_posts_categories"), class: "list-group-item " + active('oa_posts_categories', params[:type])
   .col-md-10.column
     - if params[:type].present?
       = render_cell :property, params[:type].to_sym

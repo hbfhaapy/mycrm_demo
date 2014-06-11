@@ -1,0 +1,2 @@
+$(".ajax-form").hide().empty();
+$(".incomes .table tbody").prepend('<%= escape_javascript(render(:partial => "fm/incomes/income", locals: { :income => @fm_income })) %>');

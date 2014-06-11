@@ -1,7 +1,4 @@
-%h1 Editing crm_company
-
+%h1.clearfix
+  编辑客户
+  \#{link_to '返回', crm_companies_path, class: "btn btn-default pull-right"}
 = render 'form'
-
-= link_to 'Show', @crm_company
-\|
-= link_to 'Back', crm_companies_path

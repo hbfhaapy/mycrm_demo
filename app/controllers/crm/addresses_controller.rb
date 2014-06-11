@@ -1,10 +1,13 @@
 class Crm::AddressesController < ApplicationController
   before_action :set_crm_address, only: [:show, :edit, :update, :destroy]
-
   # GET /crm/addresses
   # GET /crm/addresses.json
   def index
     @crm_addresses = Crm::Address.all
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @crm_addresses }
+    end
   end
 
   # GET /crm/addresses/1
@@ -13,8 +16,14 @@ class Crm::AddressesController < ApplicationController
   end
 
   # GET /crm/addresses/new
+  # GET /crm/addresses/new.json
   def new
     @crm_address = Crm::Address.new
+
+    respond_to do |f|
+      f.html # new.html.erb
+      f.json { render json: @crm_address }
+    end
   end
 
   # GET /crm/addresses/1/edit
@@ -24,29 +33,29 @@ class Crm::AddressesController < ApplicationController
   # POST /crm/addresses
   # POST /crm/addresses.json
   def create
-    @crm_address = Crm::Address.new(crm_address_params)
+    @crm_address = Crm::Address.new crm_address_params
 
-    respond_to do |format|
+    respond_to do |f|
       if @crm_address.save
-        format.html { redirect_to @crm_address, notice: 'Address was successfully created.' }
-        format.json { render :show, status: :created, location: @crm_address }
+        f.html { redirect_to @crm_address, notice: 'Address was successfully created.' }
+        f.json { render json: @crm_address, status: :created, location: @crm_address }
       else
-        format.html { render :new }
-        format.json { render json: @crm_address.errors, status: :unprocessable_entity }
+        f.html { render action: "new" }
+        f.json { render json: @crm_address.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /crm/addresses/1
-  # PATCH/PUT /crm/addresses/1.json
+  # PUT /crm/addresses/1
+  # PUT /crm/addresses/1.json
   def update
-    respond_to do |format|
-      if @crm_address.update(crm_address_params)
-        format.html { redirect_to @crm_address, notice: 'Address was successfully updated.' }
-        format.json { render :show, status: :ok, location: @crm_address }
+    respond_to do |f|
+      if @crm_address.update crm_address_params
+        f.html { redirect_to @crm_address, notice: 'Address was successfully updated.' }
+        f.json { head :no_content }
       else
-        format.html { render :edit }
-        format.json { render json: @crm_address.errors, status: :unprocessable_entity }
+        f.html { render action: "edit" }
+        f.json { render json: @crm_address.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -55,19 +64,18 @@ class Crm::AddressesController < ApplicationController
   # DELETE /crm/addresses/1.json
   def destroy
     @crm_address.destroy
-    respond_to do |format|
-      format.html { redirect_to crm_addresses_url, notice: 'Address was successfully destroyed.' }
-      format.json { head :no_content }
+
+    respond_to do |f|
+      f.html { redirect_to crm_addresses_url }
+      f.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_crm_address
-      @crm_address = Crm::Address.find(params[:id])
+      @crm_address = Crm::Address.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def crm_address_params
       params.require(:crm_address).permit(:content, :addressable_id, :addressable_type)
     end

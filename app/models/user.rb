@@ -16,4 +16,22 @@ class User < ActiveRecord::Base
   has_many :billings, class_name: "Fm::Billing"
   has_many :smartfinders
   belongs_to :organization
+
+  def in_role?(role)
+    if self.roles
+      self.roles.collect(&:id).include?(role.to_i)
+    end
+  end
+
+  def is_super_admin?
+    self.id == 1
+  end
+
+  def has_role?(role)
+    case role
+    when :admin then in_role?("1")
+    when :super_admin then is_super_admin?
+    else false
+    end
+  end
 end

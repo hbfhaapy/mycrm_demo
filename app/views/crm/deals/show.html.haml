@@ -1,30 +1,64 @@
-%p#notice= notice
-
-%p
-  %b Name:
+= notice_tag(notice)
+%h1.clearfix.mb1
   = @crm_deal.name
-%p
-  %b Status:
-  = @crm_deal.status_id
-%p
-  %b Category:
-  = @crm_deal.category_id
-%p
-  %b Amount:
-  = @crm_deal.amount
-%p
-  %b Company:
-  = @crm_deal.company_id
-%p
-  %b Contact:
-  = @crm_deal.contact_id
-%p
-  %b User:
-  = @crm_deal.user_id
-%p
-  %b Time:
-  = @crm_deal.time
-
-= link_to 'Edit', edit_crm_deal_path(@crm_deal)
-\|
-= link_to 'Back', crm_deals_path
+  = link_to @crm_deal.contact.name, @crm_deal.contact
+  - if @crm_deal.contact.company.present?
+    = link_to @crm_deal.contact.company.name, @crm_deal.contact.company, class: "label label-gray label-info"
+.panel.deals.panel-default
+  %table.table.table-striped.table-hover
+    %thead
+      %th 金额
+      %th 名称
+      %th 状态
+      %th 分类
+      %th 最新活动
+      %th 预计成交于
+      %th 时间
+      %th 操作
+    %tbody
+      %tr{:id => "deal-#{@crm_deal.id}"}
+        = render partial: "crm/deals/deal_td", locals: { deal: @crm_deal }
+.row
+  .col-md-9
+    - if can? :dashboard, :crm
+      .panel.panel-default
+        = high_chart('chart_basic_line', @chart)
+    #activities
+      = render partial: "crm/activities/index", locals: { object: @crm_deal }
+  .col-md-3
+    .panel.plans.panel-default
+      .panel-heading.clearfix
+        %h3.pull-left 项目
+        = link_to "立项", new_pm_plan_path(deal_id: params[:id]), class: "btn btn-primary pull-right", remote: true
+      .ajax-form
+      %table.table.table-striped.table-hover
+        %thead
+          %th 名称
+        %tbody
+          - @crm_deal.plans.accessible_by(current_ability).each do |plan|
+            = render partial: "pm/plans/simple_plan", locals: { plan: plan }
+    .panel.pricelists.panel-default
+      .panel-heading.clearfix
+        %h3.pull-left 报价单
+        = link_to "新建报价单", new_crm_deal_pricelist_path(deal_id: params[:id]), class: "btn btn-primary pull-right", remote: true
+      %table.table.table-striped
+        %thead
+          %th 名称
+          %th 总额
+          %th 操作
+        %tbody
+          - @crm_deal.pricelists.each do |pricelist|
+            = render partial: "crm/deal/pricelists/pricelist", locals: { pricelist: pricelist }
+/ Modal
+#pricelist.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
+        %h4#myModalLabel.modal-title 报价单
+      .modal-body
+      .modal-footer
+        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} 关闭
+    / /.modal-content
+  / /.modal-dialog
+/ /.modal

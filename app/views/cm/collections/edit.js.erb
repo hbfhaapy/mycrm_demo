@@ -1,0 +1,7 @@
+var tr = $("#collection-<%= @cm_collection.id %>");
+var num = tr.parent("tbody").parent("table").attr("data-cols");
+$(".ajax-form").empty();
+
+tr.html("<td colspan='" + num + "'><%= escape_javascript(render 'cm/collections/form') %></td>");
+
+defaultInit();

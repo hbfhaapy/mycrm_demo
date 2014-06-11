@@ -1,10 +1,13 @@
 class Crm::Deal::PricelistsController < ApplicationController
   before_action :set_crm_deal_pricelist, only: [:show, :edit, :update, :destroy]
-
   # GET /crm/deal/pricelists
   # GET /crm/deal/pricelists.json
   def index
     @crm_deal_pricelists = Crm::Deal::Pricelist.all
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @crm_deal_pricelists }
+    end
   end
 
   # GET /crm/deal/pricelists/1
@@ -13,8 +16,18 @@ class Crm::Deal::PricelistsController < ApplicationController
   end
 
   # GET /crm/deal/pricelists/new
+  # GET /crm/deal/pricelists/new.json
   def new
-    @crm_deal_pricelist = Crm::Deal::Pricelist.new
+    deal = Crm::Deal.find(params[:deal_id])
+    @crm_deal_pricelist = deal.pricelists.new
+    @crm_deal_pricelist.content = Crm::Deal::Pricelist::MODEL
+    @crm_deal_pricelist.user_id = current_user.id
+    @crm_deal_pricelist.contact_id = deal.contact_id
+    respond_to do |f|
+      if @crm_deal_pricelist.save
+        f.js
+      end
+    end
   end
 
   # GET /crm/deal/pricelists/1/edit
@@ -24,29 +37,31 @@ class Crm::Deal::PricelistsController < ApplicationController
   # POST /crm/deal/pricelists
   # POST /crm/deal/pricelists.json
   def create
-    @crm_deal_pricelist = Crm::Deal::Pricelist.new(crm_deal_pricelist_params)
-
-    respond_to do |format|
+    @crm_deal_pricelist = Crm::Deal::Pricelist.new crm_deal_pricelist_params
+    respond_to do |f|
       if @crm_deal_pricelist.save
-        format.html { redirect_to @crm_deal_pricelist, notice: 'Pricelist was successfully created.' }
-        format.json { render :show, status: :created, location: @crm_deal_pricelist }
+        f.html { redirect_to @crm_deal_pricelist, notice: 'Pricelist was successfully created.' }
+        f.json { render json: @crm_deal_pricelist, status: :created, location: @crm_deal_pricelist }
       else
-        format.html { render :new }
-        format.json { render json: @crm_deal_pricelist.errors, status: :unprocessable_entity }
+        f.html { render action: "new" }
+        f.json { render json: @crm_deal_pricelist.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /crm/deal/pricelists/1
-  # PATCH/PUT /crm/deal/pricelists/1.json
+  # PUT /crm/deal/pricelists/1
+  # PUT /crm/deal/pricelists/1.json
   def update
-    respond_to do |format|
-      if @crm_deal_pricelist.update(crm_deal_pricelist_params)
-        format.html { redirect_to @crm_deal_pricelist, notice: 'Pricelist was successfully updated.' }
-        format.json { render :show, status: :ok, location: @crm_deal_pricelist }
+    @crm_deal_pricelist.content = eval(params[:crm_deal_pricelist][:content])
+    @crm_deal_pricelist.dealed = params[:crm_deal_pricelist][:dealed]
+
+    respond_to do |f|
+      #if @crm_deal_pricelist.update_attributes(params[:crm_deal_pricelist])
+      if @crm_deal_pricelist.save
+        f.js
       else
-        format.html { render :edit }
-        format.json { render json: @crm_deal_pricelist.errors, status: :unprocessable_entity }
+        f.html { render action: "edit" }
+        f.json { render json: @crm_deal_pricelist.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -55,20 +70,18 @@ class Crm::Deal::PricelistsController < ApplicationController
   # DELETE /crm/deal/pricelists/1.json
   def destroy
     @crm_deal_pricelist.destroy
-    respond_to do |format|
-      format.html { redirect_to crm_deal_pricelists_url, notice: 'Pricelist was successfully destroyed.' }
-      format.json { head :no_content }
+
+    respond_to do |f|
+      f.js
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_crm_deal_pricelist
-      @crm_deal_pricelist = Crm::Deal::Pricelist.find(params[:id])
+      @crm_deal_pricelist = Crm::Deal::Pricelist.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def crm_deal_pricelist_params
-      params.require(:crm_deal_pricelist).permit(:content, :dealed, :deal_id, :user_id, :contact_id)
+      params.require(:crm_deal_pricelist).permit(:contact_id, :content, :deal_id, :dealed, :user_id)
     end
 end

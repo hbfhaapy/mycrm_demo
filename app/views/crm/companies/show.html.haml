@@ -1,27 +1,80 @@
-%p#notice= notice
-
-%p
-  %b Name:
-  = @crm_company.name
-%p
-  %b Category:
-  = @crm_company.category
-%p
-  %b Zipcode:
-  = @crm_company.zipcode
-%p
-  %b Mail:
-  = @crm_company.mail
-%p
-  %b Note:
-  = @crm_company.note
-%p
-  %b Image:
-  = @crm_company.image
-%p
-  %b User:
-  = @crm_company.user
-
-= link_to 'Edit', edit_crm_company_path(@crm_company)
-\|
-= link_to 'Back', crm_companies_path
+= notice_tag(notice)
+.row.clearfix
+  .col-md-3
+    .panel.panel-default
+      .panel-heading.clearfix
+        %h3.panel-title.pull-left
+          = image_tag @crm_company.image.url(:mini)
+          \&nbsp;
+          \#{@crm_company.name}
+          %span.label.label-info= @crm_company.category.name
+      .panel-body
+        %b 邮编：
+        = @crm_company.zipcode
+        %br/
+        %b 邮箱：
+        = @crm_company.mail
+        %br/
+        %b 备注：
+        = @crm_company.note
+        %br/
+        %b 电话：
+        %br/
+        = phones_tag @crm_company.phones
+        %b 地址：
+        %br/
+        = addresses_tag @crm_company.addresses
+      .panel-footer
+        = link_to '返回', crm_companies_path, class: "btn btn-default"
+        - if can? :manage, @crm_company
+          = link_to '编辑', edit_crm_company_path(@crm_company), class: "btn btn-warning"
+          = link_to '删除', @crm_company, method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger"
+  .col-md-9
+    - if can? :dashboard, :crm
+      .panel.panel-default
+        = high_chart('chart_basic_line', @chart)
+    %ul.nav.nav-tabs.mb1
+      %li.active
+        %a{"data-toggle" => "tab", :href => "#deals"}
+          商机
+          %span.red= @crm_company.deals.accessible_by(current_ability).count
+      %li
+        %a{"data-toggle" => "tab", :href => "#contacts"}
+          联系人
+          %span.red= @crm_company.contacts.accessible_by(current_ability).count
+      %li
+        %a{"data-toggle" => "tab", :href => "#contracts"}
+          合同
+          %span.red= @crm_company.contracts.accessible_by(current_ability).count
+    .tab-content
+      #deals.tab-pane.active
+        = render partial: "crm/companies/deals", locals: { company: @crm_company }
+      #contacts.tab-pane
+        = render partial: "crm/companies/contacts", locals: { company: @crm_company }
+      #contracts.tab-pane
+        .panel.panel-default
+          .panel-heading
+            %h3
+              合同
+              %span.red= @crm_company.contracts.accessible_by(current_ability).count
+          %table.table.table-striped.table-hover
+            %thead
+              %th 名称
+              %th 进度
+              %th 金额
+              %th 结算金额
+              %th 状态
+              %th 签订于
+            %tbody
+              - @crm_company.contracts.accessible_by(current_ability).order("signed_at DESC").each do |contract|
+                %tr
+                  %td= link_to contract.name, contract
+                  %td= contract_process_tag(contract)
+                  %td.red
+                    = number_to_currency(contract.amount, unit: "")
+                    元
+                  %td.red
+                    = number_to_currency(contract.actual_amount, unit: "")
+                    元
+                  %td= contract.status.name
+                  %td= contract.signed_at.strftime "%y-%m-%d"

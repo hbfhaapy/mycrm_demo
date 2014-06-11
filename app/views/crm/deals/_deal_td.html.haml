@@ -1,0 +1,25 @@
+%td.red
+  = number_to_currency(deal.amount, unit: "")
+  元
+%td= link_to deal.name, deal
+%td= deal.status.name
+%td= deal.category.name
+%td= crm_newest_activity_tag deal
+%td= deal.time.strftime "%Y-%m-%d"
+- if (params[:controller] == "crm/deals" &&  params[:action] == "index") || params[:controller] == "crm/companies"
+  %td
+    = link_to deal.contact.name, deal.contact
+    - if deal.contact.company.present?
+      = link_to deal.contact.company.name, deal.contact.company, class: "label label-gray label-info"
+%td
+  = time_ago_in_words deal.updated_at
+  前
+- if params[:controller] != "crm/companies"
+  %td
+    - if can? :manage, deal
+      - if params[:action] != "index"
+        = link_to '编辑', edit_crm_deal_path(deal), remote: true, class: "btn btn-warning btn-xs"
+      - if params[:action] == "index"
+        = link_to '删除', crm_deal_path(deal, from: params[:action]), method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs", remote: true
+      - else
+        = link_to '删除', crm_deal_path(deal, from: params[:action]), method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs"

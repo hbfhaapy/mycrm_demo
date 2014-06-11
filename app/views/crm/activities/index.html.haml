@@ -1,35 +1,28 @@
-%h1 Listing crm_activities
-
-%table
-  %tr
-    %th Name
-    %th Status
-    %th Category
-    %th User
-    %th Note
-    %th Activityable
-    %th Activityable type
-    %th Time
-    %th Person
-    %th
-    %th
-    %th
-
-  - @crm_activities.each do |crm_activity|
-    %tr
-      %td= crm_activity.name
-      %td= crm_activity.status_id
-      %td= crm_activity.category_id
-      %td= crm_activity.user
-      %td= crm_activity.note
-      %td= crm_activity.activityable_id
-      %td= crm_activity.activityable_type
-      %td= crm_activity.time
-      %td= crm_activity.person_id
-      %td= link_to 'Show', crm_activity
-      %td= link_to 'Edit', edit_crm_activity_path(crm_activity)
-      %td= link_to 'Destroy', crm_activity, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Activity', new_crm_activity_path
+%h1
+  市场活动
+  \#{all_count_tag @crm_activities}
+  \#{render_cell :smartfinders, :form, klass: "市场活动", smartfinder: Smartfinder.new}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :name_cont, class:"form-control input-sm", placeholder: "名称"
+    .form-group
+      = f.select :status_id_eq, options_from_collection_for_select(Crm::Activity::Status.all, "id", "name", @q.status_id_eq), { :prompt => "状态"}, { class: "form-control input-sm" }
+    .form-group
+      = f.select :category_id_eq, options_from_collection_for_select(Crm::Activity::Category.all, "id", "name", @q.category_id_eq), { :prompt => "类型"}, { class: "form-control input-sm" }
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.table-striped.table-hover
+  %thead
+    %th 内容
+    %th 所属
+    %th 状态
+    %th 分类
+    %th= sort_link @q, :time, "时间", {}, :method => action_name == 'activities_advanced_search' ? :post : :get
+    %th 对象
+    %th 备注
+    %th 操作
+  %tbody
+    - @crm_activities.each do |activity|
+      = render partial: "crm/activities/activity", locals: { activity: activity }
+.text-center
+  = render partial: "layouts/page", locals: { objects: @crm_activities }

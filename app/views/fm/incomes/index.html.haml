@@ -1,29 +1,28 @@
-%h1 Listing fm_incomes
-
-%table
-  %tr
-    %th Amount
-    %th Time
-    %th Note
-    %th Collection
-    %th Company
-    %th User
-    %th
-    %th
-    %th
-
-  - @fm_incomes.each do |fm_income|
+%h1
+  到款
+  \#{all_count_tag @fm_incomes}
+  \#{render_cell :smartfinders, :form, klass: "到款", smartfinder: Smartfinder.new}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :collection_name_cont, class:"form-control input-sm", placeholder: "收款计划名称"
+    .form-group
+      = f.text_field :collection_contract_company_name_cont, class:"form-control input-sm", placeholder: "客户名称"
+    .form-group
+      = f.text_field :note_cont, class:"form-control input-sm", placeholder: "备注"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.table-striped.table-hover
+  %thead
     %tr
-      %td= fm_income.amount
-      %td= fm_income.time
-      %td= fm_income.note
-      %td= fm_income.collection_id
-      %td= fm_income.company_id
-      %td= fm_income.user
-      %td= link_to 'Show', fm_income
-      %td= link_to 'Edit', edit_fm_income_path(fm_income)
-      %td= link_to 'Destroy', fm_income, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Income', new_fm_income_path
+      %th= sort_link @q, :amount, "金额", {}, :method => action_name == 'incomes_advanced_search' ? :post : :get
+      %th= sort_link @q, :time, "到款时间", {}, :method => action_name == 'incomes_advanced_search' ? :post : :get
+      %th 收款计划
+      %th 项目
+      %th 客户
+      %th 备注
+      %th 操作
+  %tbody
+    - @fm_incomes.each do |income|
+      = render partial: "fm/incomes/income", locals: { income: income }
+.text-center
+  = render partial: "layouts/page", locals: { objects: @fm_incomes }

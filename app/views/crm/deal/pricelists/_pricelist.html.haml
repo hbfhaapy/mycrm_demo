@@ -1,0 +1,11 @@
+%tr{:id => "pricelist-#{pricelist.id}"}
+  %td
+    - if pricelist.dealed == true
+      %span.label.label-success.mr1 已成交
+    = link_to "报价单##{pricelist.id}", pricelist, remote: true
+  %td.red.price
+    = number_to_currency((pricelist.content["overall"]["price"] + pricelist.content["plan"]["price"] + pricelist.content["implement"]["price"]), unit: "")
+    元
+  %td
+    - if can? :destory, pricelist
+      = link_to "删除", pricelist, method: :delete, data: { confirm: '确定删除?' }, remote: true, class: 'red'

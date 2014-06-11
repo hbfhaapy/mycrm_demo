@@ -1,27 +1,47 @@
-%h1 Listing cm_collections
-
-%table
-  %tr
-    %th Name
-    %th Percent
-    %th Time
-    %th Contact
-    %th User
-    %th
-    %th
-    %th
-
-  - @cm_collections.each do |cm_collection|
+%h1
+  收款计划
+  / \#{all_count_tag @cm_collections}
+  \#{render_cell :smartfinders, :form, klass: "收款计划", smartfinder: Smartfinder.new}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :name_cont, class:"form-control input-sm", placeholder: "名称"
+    .form-group
+      = f.text_field :percent_eq, class:"form-control input-sm", placeholder: "比例"
+    .form-group
+      = f.text_field :contract_name_cont, class:"form-control input-sm", placeholder: "合同名称"
+      = f.text_field :contract_company_name_cont, class:"form-control input-sm", placeholder: "公司名称"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.table-striped.table-hover
+  %thead
     %tr
-      %td= cm_collection.name
-      %td= cm_collection.percent
-      %td= cm_collection.time
-      %td= cm_collection.contact_id
-      %td= cm_collection.user_id
-      %td= link_to 'Show', cm_collection
-      %td= link_to 'Edit', edit_cm_collection_path(cm_collection)
-      %td= link_to 'Destroy', cm_collection, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Collection', new_cm_collection_path
+      %th 名称
+      %th 到款
+      %th= sort_link @q, :percent, "比例", {}, :method => action_name == 'collections_advanced_search' ? :post : :get
+      %th 金额
+      %th= sort_link @q, :time, "到款时间", {}, :method => action_name == 'collections_advanced_search' ? :post : :get
+      %th 合同
+      %th 项目
+      %th 客户
+      %th= sort_link @q, :created_at, "创建于", {}, :method => action_name == 'collections_advanced_search' ? :post : :get
+      %th 操作
+  %tbody
+    - @cm_collections.each do |cm_collection|
+      %tr
+        %td= link_to cm_collection.name, cm_collection
+        %td= collection_process_tag cm_collection
+        %td
+          = cm_collection.percent
+          \%
+        %td.red
+          = number_to_currency((cm_collection.contract.amount/100*cm_collection.percent).round(2), unit: "")
+          元
+        %td= cm_collection.time.strftime "%Y-%m-%d"
+        %td= link_to cm_collection.contract.name, cm_collection.contract
+        %td= link_to cm_collection.contract.company.name, cm_collection.contract.company
+        %td= cm_collection.created_at.strftime "%Y-%m-%d"
+        %td
+          - if can? :destroy, cm_collection
+            = link_to '删除', cm_collection, method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs"
+.text-center
+  = render partial: "layouts/page", locals: { objects: @cm_collections }

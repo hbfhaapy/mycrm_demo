@@ -3,51 +3,67 @@
     <div class="container">
       <%= link_to "Mycrm app", root_path, id: "logo" %>
       <nav>
-        <ul class="nav navbar-nav pull-left dropdown-menu">
-          <li><%= link_to "个人首页", root_path %></li>
-            <li><%= link_to "销售报表" %></li>
-            <li><%= link_to "财务报表" %></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">CRM <b class="caret"></b></a>
+        <ul class="nav navbar-nav pull-left">
+          <li class="dropdown">  
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><%= link_to "联系人" %></li>
-              <li><%= link_to "客户" %></li>
-              <li class="divider"></li>
-              <li><%= link_to "商机" %></li>
-              <li><%= link_to "活动"%></li>
+              <li><%= link_to "个人首页", root_path %></li>
+              <% if can? :dashboard, :crm %>
+                <li><%= link_to "销售报表" %></li>
+              <% end %>
+              <% if can? :dashboard, :fm %>
+                <li><%= link_to "财务报表" %></li>              
+              <% end %>
             </ul>
           </li>
+          <% if can? :see, :crm_nav %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">CRM <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "联系人", crm_contacts_path %></li>
+                <li><%= link_to "客户", crm_companies_path %></li>
+                <li class="divider"></li>
+                <li><%= link_to "商机", crm_deals_path %></li>
+                <li><%= link_to "活动", crm_activities_path %></li>
+              </ul>
+            </li>
+          <% end %>
 
-          <li><%= link_to "合同" %></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">财务 <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><%= link_to "收款计划" %></li>
-              <li class="divider"></li>
-              <li><%= link_to "开票" %></li>
-              <li><%= link_to "到款" %></li>
-            </ul>
-          </li>
+          <% if can? :see, :cm_nav %>
+            <li><%= link_to "合同", cm_contracts_path %></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">财务 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "收款计划", cm_collections_path %></li>
+                <li class="divider"></li>
+                <li><%= link_to "开票", fm_billings_path %></li>
+                <li><%= link_to "到款", fm_incomes_path %></li>
+              </ul>
+            </li>
+          <% end %>
         </ul>
         <ul class="nav navbar-nav pull-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">设置 <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <%#if can? :manage, User %>
-                <li><%= link_to "用户管理", users_path %></li>
-              <%#end %>
-              <%#if can? :manage, Organization %>
-                <li><%= link_to "组织架构", organizations_path %></li>
-              <%#end %>
-              <%#if can? :manage, :properties %>
-                <li><%= link_to "属性管理", properties_path %></li>
-              <%#end %>
+          <% if can? :manage, :properties %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">设置 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <%if can? :manage, User %>
+                  <li><%= link_to "用户管理", users_path %></li>
+                <%end %>
+                <%if can? :manage, Organization %>
+                  <li><%= link_to "组织架构", organizations_path %></li>
+                <%end %>
+                <%if can? :manage, :properties %>
+                  <li><%= link_to "属性管理", properties_path %></li>
+                <%end %>
 
-              <%#if can? :manage, Role %>
-                <li><%= link_to "权限管理" %></li>
-              <%#end %>
-            </ul> 
-          </li>
+                <%if can? :manage, Role %>
+                  <li><%= link_to "权限管理", roles_path %></li>
+                <%end %>
+              </ul> 
+            </li>
+          <% end %>
+
           <li><%= link_to current_user.email, current_user %></li>
       <li><%= link_to "退出", destroy_user_session_path, :method => :delete %></li>
         </ul>

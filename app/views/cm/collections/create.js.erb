@@ -1,0 +1,2 @@
+$(".ajax-form").hide().empty();
+$(".collections .table tbody").prepend('<%= escape_javascript(render(:partial => "cm/collections/collection", locals: { :collection => @cm_collection })) %>');

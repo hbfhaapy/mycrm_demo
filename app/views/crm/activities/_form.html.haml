@@ -1,37 +1,23 @@
-= form_for @crm_activity do |f|
-  - if @crm_activity.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@crm_activity.errors.count, "error")} prohibited this crm_activity from being saved:"
-      %ul
-        - @crm_activity.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :status_id
-    = f.number_field :status_id
-  .field
-    = f.label :category_id
-    = f.number_field :category_id
-  .field
-    = f.label :user
-    = f.text_field :user
-  .field
-    = f.label :note
-    = f.text_field :note
-  .field
-    = f.label :activityable_id
-    = f.number_field :activityable_id
-  .field
-    = f.label :activityable_type
-    = f.number_field :activityable_type
-  .field
-    = f.label :time
-    = f.datetime_select :time
-  .field
-    = f.label :person_id
-    = f.number_field :person_id
-  .actions
-    = f.submit 'Save'
+.alert.alert-warning.form-inline
+  - if params[:action] == "new"
+    %a.close{"aria-hidden" => "true", "data-dismiss" => "alert", :href => "#"} &times;
+  = simple_form_for(@crm_activity, remote: true) do |f|
+    .form-group
+      = f.input :name, label: false, placeholder: "内容...", input_html: { class: "form-control" }
+    .form-group
+      = f.association :status, label: false, prompt: "状态", input_html: { class: "form-control" }
+    .form-group
+      = f.association :category, label: false, prompt: "分类", input_html: { class: "form-control" }
+    .form-group
+      - if params[:action] == "new"
+        = f.text_field :time, value: Time.now.strftime("%Y-%m-%d"), class: "datepicker form-control"
+      - elsif params[:action] == "edit"
+        = f.text_field :time, value: @crm_activity.time.strftime("%Y-%m-%d"), class: "datepicker form-control"
+    .form-group
+      = f.association :person, label: false, input_html: { class: "form-control", id: "select-person", placeholder: "选择活动对象..." }
+    .form-group
+      = f.input :note, label: false, placeholder: "备注...", input_html: { class: "form-control" }
+    - if params[:action] == "new"
+      = f.hidden_field :activityable_id, value: params[:id]
+      = f.hidden_field :activityable_type, value: params[:type]
+    = f.submit "提交", class: "btn btn-success"

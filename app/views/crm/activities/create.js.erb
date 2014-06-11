@@ -1,0 +1,4 @@
+$(".ajax-form").hide().empty();
+$(".activities .table tbody").prepend('<%= escape_javascript(render(:partial => "crm/activities/activity", locals: { :activity => @crm_activity })) %>');
+
+defaultInit();

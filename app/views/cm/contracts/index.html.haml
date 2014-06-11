@@ -1,37 +1,47 @@
-%h1 Listing cm_contracts
-
-%table
-  %tr
-    %th Name
-    %th Amount
-    %th Actual amount
-    %th Status
-    %th Agent
-    %th Signed at
-    %th Started at
-    %th Company
-    %th Plan
-    %th User
-    %th
-    %th
-    %th
-
-  - @cm_contracts.each do |cm_contract|
+%h1
+  合同
+  \#{all_count_tag @cm_contracts}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :name_cont, class:"form-control input-sm", placeholder: "名称"
+    .form-group
+      = f.select :status_id_eq, options_from_collection_for_select(Cm::Contract::Status.all, "id", "name", @q.status_id_eq), { :prompt => "状态"}, { class: "form-control input-sm" }
+    .form-group
+      = f.text_field :agent_username_cont, class:"form-control input-sm", placeholder: "代理人姓名"
+    .form-group
+      = f.text_field :company_name_cont, class:"form-control input-sm", placeholder: "客户名称"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.table-striped.table-hover
+  %thead
     %tr
-      %td= cm_contract.name
-      %td= cm_contract.amount
-      %td= cm_contract.actual_amount
-      %td= cm_contract.status_id
-      %td= cm_contract.agent_id
-      %td= cm_contract.signed_at
-      %td= cm_contract.started_at
-      %td= cm_contract.company_id
-      %td= cm_contract.plan_id
-      %td= cm_contract.user
-      %td= link_to 'Show', cm_contract
-      %td= link_to 'Edit', edit_cm_contract_path(cm_contract)
-      %td= link_to 'Destroy', cm_contract, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Contract', new_cm_contract_path
+      %th 名称
+      %th 到款
+      %th= sort_link @q, :amount, "金额", {}, :method => action_name == 'contracts_advanced_search' ? :post : :get
+      %th= sort_link @q, :actual_amount, "结算金额", {}, :method => action_name == 'contracts_advanced_search' ? :post : :get
+      %th 状态
+      %th 代理人
+      %th 公司
+      %th= sort_link @q, :signed_at, "签订时间", {}, :method => action_name == 'contracts_advanced_search' ? :post : :get
+      %th 操作
+  %tbody
+    - @cm_contracts.each do |cm_contract|
+      %tr
+        %td= link_to cm_contract.name, cm_contract
+        %td= contract_process_tag(cm_contract)
+        %td.red
+          = number_to_currency(cm_contract.amount, unit: "")
+          元
+        %td.red
+          = number_to_currency(cm_contract.actual_amount, unit: "")
+          元
+        %td= cm_contract.status.name
+        %td= link_to cm_contract.agent.username, cm_contract.agent
+        %td= link_to cm_contract.company.name, cm_contract.company
+        %td= cm_contract.signed_at.strftime "%Y-%m-%d"
+        %td
+          - if can? :manage, cm_contract
+            = link_to '编辑', edit_cm_contract_path(cm_contract), class: "btn btn-warning btn-xs"
+            = link_to '删除', cm_contract, method: :delete, data: { confirm: '确实删除?' }, class: "btn btn-danger btn-xs"
+.text-center
+  = render partial: "layouts/page", locals: { objects: @cm_contracts }

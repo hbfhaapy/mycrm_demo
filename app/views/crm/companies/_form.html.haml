@@ -1,31 +1,29 @@
-= form_for @crm_company do |f|
+= simple_nested_form_for(@crm_company) do |f|
   - if @crm_company.errors.any?
     #error_explanation
-      %h2= "#{pluralize(@crm_company.errors.count, "error")} prohibited this crm_company from being saved:"
+      %h2
+        = pluralize(@crm_company.errors.count, "error")
+        prohibited this crm_company from being saved:
       %ul
         - @crm_company.errors.full_messages.each do |msg|
           %li= msg
-
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :category
-    = f.text_field :category
-  .field
-    = f.label :zipcode
-    = f.number_field :zipcode
-  .field
-    = f.label :mail
-    = f.text_field :mail
-  .field
-    = f.label :note
-    = f.text_area :note
-  .field
-    = f.label :image
-    = f.text_field :image
-  .field
-    = f.label :user
-    = f.text_field :user
-  .actions
-    = f.submit 'Save'
+  .row.clearfix
+    .col-md-4.column
+      .form-group
+        = image_tag(@crm_company.image_url(:large)) if @crm_company.image?
+        %br/
+        = f.label :image, "上传照片"
+        = f.file_field :image
+      .form-group
+        = f.association :category, label: "类型", input_html: { class: "form-control" }
+      .form-group
+        = f.input :name, label: "名称", placeholder: "公司名称...", input_html: { class: "form-control" }
+      .form-group
+        = f.input :zipcode, label: "邮编", placeholder: "公司邮编...", input_html: { class: "form-control" }
+      .form-group
+        = f.input :mail, label: "邮箱", placeholder: "公司邮箱...", input_html: { class: "form-control" }
+      .form-group
+        = f.input :note, as: :text, label: "备注", placeholder: "备注...", input_html: { class: "form-control", rows: 6 }
+    .col-md-8.column
+      = render partial: "sub_information/phones_and_addresses", locals: { f: f, object: @crm_company  }
+  = f.submit "确认提交", class: "btn btn-success btn-lg"

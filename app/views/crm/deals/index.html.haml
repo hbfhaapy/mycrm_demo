@@ -1,33 +1,31 @@
-%h1 Listing crm_deals
-
-%table
-  %tr
-    %th Name
-    %th Status
-    %th Category
-    %th Amount
-    %th Company
-    %th Contact
-    %th User
-    %th Time
-    %th
-    %th
-    %th
-
-  - @crm_deals.each do |crm_deal|
-    %tr
-      %td= crm_deal.name
-      %td= crm_deal.status_id
-      %td= crm_deal.category_id
-      %td= crm_deal.amount
-      %td= crm_deal.company_id
-      %td= crm_deal.contact_id
-      %td= crm_deal.user_id
-      %td= crm_deal.time
-      %td= link_to 'Show', crm_deal
-      %td= link_to 'Edit', edit_crm_deal_path(crm_deal)
-      %td= link_to 'Destroy', crm_deal, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Deal', new_crm_deal_path
+%h1
+  商机
+  \#{all_count_tag @crm_deals}
+  \#{render_cell :smartfinders, :form, klass: "商机", smartfinder: Smartfinder.new}
+.alert.alert-info.form-inline
+  = search_form_for @q, :builder => SimpleForm::FormBuilder do |f|
+    .form-group
+      = f.text_field :name_cont, class:"form-control input-sm", placeholder: "名称"
+    .form-group
+      = f.select :status_id_eq, options_from_collection_for_select(Crm::Deal::Status.all, "id", "name", @q.status_id_eq), { :prompt => "状态"}, { class: "form-control input-sm" }
+    .form-group
+      = f.select :category_id_eq, options_from_collection_for_select(Crm::Deal::Category.all, "id", "name", @q.category_id_eq), { :prompt => "类型"}, { class: "form-control input-sm" }
+    .form-group
+      = f.text_field :contact_name_cont, class:"form-control input-sm", placeholder: "联系人姓名"
+    = f.submit "查询", class: "btn btn-success btn-sm"
+%table.table.deals.table-striped.table-hover
+  %thead
+    %th= sort_link @q, :amount, "金额", {}, :method => action_name == 'deals_advanced_search' ? :post : :get
+    %th 名称
+    %th 状态
+    %th 分类
+    %th 最新活动
+    %th= sort_link @q, :time, "预计成交于", {}, :method => action_name == 'deals_advanced_search' ? :post : :get
+    %th 联系人
+    %th= sort_link @q, :created_at, "时间", {}, :method => action_name == 'deals_advanced_search' ? :post : :get
+    %th 操作
+  %tbody
+    - @crm_deals.each do |deal|
+      = render partial: "crm/deals/deal", locals: { deal: deal }
+.text-center
+  = render partial: "layouts/page", locals: { objects: @crm_deals }

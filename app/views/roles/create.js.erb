@@ -1,0 +1,4 @@
+$(".ajax-form").hide().empty();
+$(".table tbody").append('<%= escape_javascript(render(:partial => "roles/role", locals: { :role => @role })) %>');
+
+defaultInit();

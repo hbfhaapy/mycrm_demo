@@ -1,0 +1,14 @@
+%td.red
+  = number_to_currency(billing.amount, unit: "")
+  元
+%td= billing.time.strftime "%Y-%m-%d"
+%td= link_to billing.manager.username, billing.manager
+- if params[:action] == "index"
+  %td= link_to billing.collection.name, billing.collection
+  %td= link_to billing.company.name, billing.company
+  %td= link_to billing.collection.contract.plan.name, billing.collection.contract.plan
+%td
+  - if can? :manage, billing
+    - unless params[:action] == "index"
+      = link_to '编辑', edit_fm_billing_path(billing), remote: true, class: "btn btn-warning btn-xs"
+    = link_to '删除', billing, method: :delete, remote: true, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs"

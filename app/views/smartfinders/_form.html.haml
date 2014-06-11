@@ -1,22 +1,20 @@
-= form_for @smartfinder do |f|
-  - if @smartfinder.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@smartfinder.errors.count, "error")} prohibited this smartfinder from being saved:"
-      %ul
-        - @smartfinder.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :url
-    = f.text_field :url
-  .field
-    = f.label :klass
-    = f.text_field :klass
-  .field
-    = f.label :name
-    = f.text_field :name
-  .field
-    = f.label :user
-    = f.text_field :user
-  .actions
-    = f.submit 'Save'
+/ Modal
+= simple_form_for(smartfinder, remote: true) do |f|
+  #smartfinder-form.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
+          %h4#myModalLabel.modal-title 为个性化视图命名
+        .modal-body
+          - if params[:action] != "edit"
+            = f.hidden_field :url, value: request.fullpath
+            = f.hidden_field :klass, value: @klass
+          .form-group
+            = f.input :name, label: false, input_html: { class: "form-control", placeholder: "名称..." }
+        .modal-footer
+          %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} 取消
+          = f.submit "保存", class: "btn btn-success"
+      / /.modal-content
+    / /.modal-dialog
+  / /.modal

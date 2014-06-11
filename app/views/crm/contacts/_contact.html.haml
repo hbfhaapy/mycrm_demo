@@ -1,0 +1,23 @@
+%tr
+  %td
+    = image_tag contact.image.url(:mini) if contact.image?
+    = link_to contact.name, contact
+  %td= contact.status.name
+  %td= contact.category.name
+  %td= newest_deal_tag(contact)
+  %td= crm_newest_activity_tag(contact)
+  - if params[:controller] != "crm/companies"
+    %td= link_to contact.company.name, contact.company, class: "label label-gray label-info" if contact.company
+  %td
+    - if contact.qq
+      = link_to "tencent://message/?uin=#{contact.qq}", title: "联系#{contact.qq}", class: "gray" do
+        = fa_icon "comment"
+  %td
+    = phones_tag contact.phones
+  %td
+    = time_ago_in_words contact.updated_at
+    前
+  - if params[:controller] != "crm/companies"
+    %td
+      - if can? :manage, contact
+        = link_to '删除', contact, method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs"

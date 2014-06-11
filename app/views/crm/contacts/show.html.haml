@@ -1,39 +1,59 @@
-%p#notice= notice
-
-%p
-  %b Name:
-  = @crm_contact.name
-%p
-  %b Category:
-  = @crm_contact.category_id
-%p
-  %b Company:
-  = @crm_contact.company_id
-%p
-  %b User:
-  = @crm_contact.user
-%p
-  %b Mail:
-  = @crm_contact.mail
-%p
-  %b Qq:
-  = @crm_contact.qq
-%p
-  %b Msn:
-  = @crm_contact.msn
-%p
-  %b Job:
-  = @crm_contact.job
-%p
-  %b Note:
-  = @crm_contact.note
-%p
-  %b Image:
-  = @crm_contact.image
-%p
-  %b Status:
-  = @crm_contact.status_id
-
-= link_to 'Edit', edit_crm_contact_path(@crm_contact)
-\|
-= link_to 'Back', crm_contacts_path
+= notice_tag(notice)
+.row.clearfix
+  .col-md-3
+    .panel.panel-default
+      .panel-heading.clearfix
+        %h3.panel-title.pull-left
+          = image_tag @crm_contact.image.url(:mini)
+          \&nbsp;
+          \#{@crm_contact.name}
+          %span.label.label-info= "#{@crm_contact.category.name} - #{@crm_contact.status.name}"
+      .panel-body
+        - if @crm_contact.company.present?
+          %b 公司：
+          = link_to @crm_contact.company.name, @crm_contact.company
+          %br/
+        %b 职位：
+        = @crm_contact.job
+        %br/
+        %b 邮箱：
+        = @crm_contact.mail
+        %br/
+        %b QQ：
+        = @crm_contact.qq
+        %br/
+        %b MSN：
+        = @crm_contact.msn
+        %br/
+        %b 备注：
+        = @crm_contact.note
+        %br/
+        %b 电话：
+        %br/
+        = phones_tag @crm_contact.phones
+        %b 地址：
+        %br/
+        = addresses_tag @crm_contact.addresses
+      .panel-footer
+        = link_to '返回', crm_contacts_path, class: "btn btn-default"
+        - if can? :manage, @crm_contact
+          = link_to '编辑', edit_crm_contact_path(@crm_contact), class: "btn btn-warning"
+          = link_to '删除', @crm_contact, method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger"
+  .col-md-9
+    - if can? :dashboard, :crm
+      .panel.panel-default
+        = high_chart('chart_basic_line', @chart)
+    %ul.nav.nav-tabs.mb1
+      %li.active
+        %a{"data-toggle" => "tab", :href => "#deals"}
+          商机
+          %span.red= @crm_contact.deals.accessible_by(current_ability).count
+      %li
+        %a{"data-toggle" => "tab", :href => "#activities"}
+          活动
+          %span.red= @crm_contact.activities.accessible_by(current_ability).count
+    .tab-content
+      #deals.tab-pane.active
+        = render partial: "crm/contacts/deals", locals: { object: @crm_contact }
+      #activities.tab-pane
+        = render partial: "crm/activities/index", locals: { object: @crm_contact }

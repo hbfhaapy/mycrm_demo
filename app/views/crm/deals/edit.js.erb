@@ -1,0 +1,4 @@
+var tr = $("#deal-<%= @crm_deal.id %>");
+var num = tr.parent("tbody").parent("table").attr("data-cols");
+
+tr.html("<td colspan='" + num + "'><%= escape_javascript(render 'crm/deals/form') %></td>");

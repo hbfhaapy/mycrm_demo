@@ -1,28 +1,16 @@
-= form_for @fm_billing do |f|
-  - if @fm_billing.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@fm_billing.errors.count, "error")} prohibited this fm_billing from being saved:"
-      %ul
-        - @fm_billing.errors.full_messages.each do |msg|
-          %li= msg
-
-  .field
-    = f.label :amount
-    = f.text_field :amount
-  .field
-    = f.label :time
-    = f.datetime_select :time
-  .field
-    = f.label :manager_id
-    = f.number_field :manager_id
-  .field
-    = f.label :company_id
-    = f.number_field :company_id
-  .field
-    = f.label :collection_id
-    = f.number_field :collection_id
-  .field
-    = f.label :user
-    = f.text_field :user
-  .actions
-    = f.submit 'Save'
+.alert.alert-warning.form-inline
+  %a.close{"aria-hidden" => "true", "data-dismiss" => "alert", :href => "#"} &times;
+  = simple_form_for(@fm_billing, remote: true) do |f|
+    .form-group
+      = f.input :amount, label: false, input_html: { class: "form-control", placeholder: "实开金额" }
+    .form-group
+      - if params[:action] == "new"
+        = f.text_field :time, value: Time.now.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+      - elsif params[:action] == "edit"
+        = f.text_field :time, value: @fm_billing.time.strftime("%Y-%m-%d"), class: "datepicker form-control", required: "required"
+    .form-group
+      = f.association :manager, label: false, label_method: :username, value_method: :id, input_html: { id: "select-manager", class: "form-control", placeholder: "选择开票人员" }
+    .form-group
+      = f.association :company, label: false, input_html: { id: "select-company", class: "form-control", placeholder: "选择客户" }
+    = f.hidden_field :collection_id, value: @fm_billing.collection_id
+    = f.submit "提交", class: "btn btn-success"

@@ -1,0 +1,14 @@
+%td.green
+  = number_to_currency(income.amount, unit: "")
+  元
+%td= income.time.strftime "%Y-%m-%d"
+- if params[:action] == "index"
+  %td= link_to income.collection.name, income.collection
+  %td= link_to income.collection.contract.plan.name, income.collection.contract.plan
+%td= link_to income.company.name, income.company
+%td= income.note
+%td
+  - if can? :manage, income
+    - unless params[:action] == "index"
+      = link_to '编辑', edit_fm_income_path(income), remote: true, class: "btn btn-warning btn-xs"
+    = link_to '删除', income, method: :delete, data: { confirm: '确定删除?' }, remote: true, class: "btn btn-danger btn-xs"

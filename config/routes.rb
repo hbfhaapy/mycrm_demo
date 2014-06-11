@@ -1,53 +1,77 @@
 Rails.application.routes.draw do
 
+  resources :roles, :properties, :smartfinders
+
   namespace :crm do
+    resources :addresses, :phones, :deals
+
+    resources :contacts do
+      match 'advanced_search' => 'contacts#advanced_search',
+            on: :collection, via: [:get, :post], as: :contacts_advanced_search
+    end
+
+    namespace :contact do
+      resources :statuses
+    end
+
+    resources :companies do
+      match 'advanced_search' => 'companies#advanced_search',
+            on: :collection, via: [:get, :post], as: :companies_advanced_search
+    end
+
+    resources :activities do
+      match 'advanced_search' => 'activities#advanced_search',
+            on: :collection, via: [:get, :post], as: :activities_advanced_search
+    end
+
+    namespace :company do
+      resources :categories
+    end
+
+    namespace :contact do
+      resources :categories
+    end
+
+    namespace :phone do
+      resources :klasses
+    end
+
+    namespace :activity do
+      resources :statuses
+      resources :categories
+    end
+
     namespace :deal do
+      resources :statuses
+      resources :categories
       resources :pricelists
     end
   end
 
-  resources :smartfinders
-
   namespace :fm do
-    resources :incomes
-  end
-
-  namespace :fm do
-    resources :billings
+    resources :incomes do
+      match 'advanced_search' => 'incomes#advanced_search',
+            on: :collection, via: [:get, :post], as: :incomes_advanced_search
+    end
+    resources :billings do
+      match 'advanced_search' => 'billings#advanced_search',
+            on: :collection, via: [:get, :post], as: :billings_advanced_search
+    end
   end
 
   namespace :cm do
-    resources :collections
-  end
+    resources :collections do
+      match 'advanced_search' => 'collections#advanced_search',
+            on: :collection, via: [:get, :post], as: :collections_advanced_search
+    end
+    resources :contracts do
+      match 'advanced_search' => 'contracts#advanced_search',
+            on: :collection, via: [:get, :post], as: :contracts_advanced_search
+    end
 
-  namespace :cm do
-    resources :contracts
-  end
-
-  namespace :crm do
-    resources :activities
-  end
-
-  namespace :crm do
-    resources :deals
-  end
-
-  namespace :crm do
-    resources :contacts
-  end
-
-  namespace :crm do
-    resources :addresses
-  end
-
-  namespace :crm do
-    resources :phones
-  end
-
-  resources :properties
-
-  namespace :crm do
-    resources :companies
+    namespace :contract do
+      resources :statuses
+    end
   end
 
   resources :organizations do

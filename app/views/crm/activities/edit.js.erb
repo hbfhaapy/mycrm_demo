@@ -1,0 +1,6 @@
+var tr = $("#crm-activity-<%= @crm_activity.id %>");
+var num = tr.parent("tbody").parent("table").attr("data-cols");
+
+tr.html("<td colspan='" + num + "'><%= escape_javascript(render 'crm/activities/form') %></td>");
+
+defaultInit();

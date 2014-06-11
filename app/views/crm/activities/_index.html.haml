@@ -1,0 +1,21 @@
+.panel.panel-default.activities
+  .panel-heading.clearfix
+    %h3.pull-left
+      活动
+      %span.red= object.activities.accessible_by(current_ability).count
+    = link_to "新增活动", new_crm_activity_path(id: object.id, type: object.class.to_s), remote: true, class: "btn btn-primary pull-right"
+  .ajax-form
+  %table.table.table-striped.table-hover
+    %thead
+      %th 内容
+      %th 状态
+      %th 分类
+      %th 时间
+      %th 对象
+      %th 备注
+      %th 操作
+    %tbody
+      - object.activities.accessible_by(current_ability).page(params[:page]).order("time DESC").each do |activity|
+        = render partial: "crm/activities/activity", locals: { activity: activity }
+.text-center
+  = paginate object.activities.accessible_by(current_ability).page(params[:page]), { :params => { :controller => params[:controller], :action => "show", children: "activities" } }

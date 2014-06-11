@@ -1,36 +1,63 @@
-%p#notice= notice
-
-%p
-  %b Name:
-  = @cm_contract.name
-%p
-  %b Amount:
-  = @cm_contract.amount
-%p
-  %b Actual amount:
-  = @cm_contract.actual_amount
-%p
-  %b Status:
-  = @cm_contract.status_id
-%p
-  %b Agent:
-  = @cm_contract.agent_id
-%p
-  %b Signed at:
-  = @cm_contract.signed_at
-%p
-  %b Started at:
-  = @cm_contract.started_at
-%p
-  %b Company:
-  = @cm_contract.company_id
-%p
-  %b Plan:
-  = @cm_contract.plan_id
-%p
-  %b User:
-  = @cm_contract.user
-
-= link_to 'Edit', edit_cm_contract_path(@cm_contract)
-\|
-= link_to 'Back', cm_contracts_path
+= notice_tag notice
+.row
+  .col-md-3
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title
+          = @cm_contract.name
+          = content_tag :span, @cm_contract.status.name, class: "label label-info"
+      .panel-body
+        %b 金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额：
+        = content_tag :span, "#{number_to_currency(@cm_contract.amount, unit: "")}元", class: "red"
+        %br/
+        %b 结算金额：
+        = content_tag :span, "#{number_to_currency(@cm_contract.actual_amount, unit: "")}元", class: "red"
+        %br/
+        %b 开票金额：
+        = content_tag :span, "#{number_to_currency(@cm_contract.collections.joins(:billings).sum("fm_billings.amount"), unit: "")}元", class: "red"
+        %br/
+        %b 到款金额：
+        = content_tag :span, "#{number_to_currency(@cm_contract.collections.joins(:incomes).sum("fm_incomes.amount"), unit: "")}元", class: "red"
+        .row.mt1
+          .col-md-8.col-xs-6
+            = contract_process_tag(@cm_contract)
+        %b 代理人员：
+        = @cm_contract.agent.username
+        %br/
+        %b 签订时间：
+        = @cm_contract.signed_at.strftime "%Y-%m-%d"
+        %br/
+        %b 服务开始：
+        = @cm_contract.started_at.strftime "%Y-%m-%d"
+        %br/
+        %b 服务结束：
+        = @cm_contract.ended_at.strftime "%Y-%m-%d"
+        %br/
+        %b 客&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户：
+        = link_to @cm_contract.company.name, @cm_contract.company
+        %br/
+        %b 项目：
+        = link_to @cm_contract.plan.name, @cm_contract.plan
+      .panel-footer
+        - if can? :update, @cm_contract
+          = link_to '编辑', edit_cm_contract_path(@cm_contract), class: "btn btn-warning"
+        = link_to '返回', cm_contracts_path, class: "btn btn-default"
+  .col-md-9
+    .panel.collections.panel-default
+      .panel-heading.clearfix
+        %h3.pull-left 收款计划
+        - if can? :create, Cm::Collection
+          = link_to "新建收款计划", new_cm_collection_path(contract_id: params[:id]), class: "btn btn-primary pull-right", remote: true
+      %span#amount.hidden= @cm_contract.amount
+      .ajax-form
+      %table.table.table-striped.table-hover
+        %thead
+          %th 名称
+          %th 到款
+          %th 比例
+          %th 金额
+          %th 到款时间
+          %th 操作
+        %tbody
+          - @cm_contract.collections.accessible_by(current_ability).each do |collection|
+            = render partial: "cm/collections/collection", locals: { collection: collection }

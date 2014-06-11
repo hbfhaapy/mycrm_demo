@@ -1,14 +1,20 @@
 class OrganizationsController < ApplicationController
+  load_and_authorize_resource :class => "Organization"
   before_action :set_organization, only: [:show, :edit, :update, :destroy]
   include TheSortableTreeController::Rebuild
+
+  def manage
+    @organizations = Organization.nested_set.select(:id, :name, :parent_id).all
+  end
   # GET /organizations
   # GET /organizations.json
   def index
-    @organizations = Organization.all
-  end
+    @organizations = Organization.includes(:parent).page(params[:page])
 
-  def manage
-    @organizations = Organization.nested_set.select('id, name, parent_id').all
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @organizations }
+    end
   end
 
   # GET /organizations/1
@@ -17,11 +23,11 @@ class OrganizationsController < ApplicationController
   end
 
   # GET /organizations/new
+  # GET /organizations/new.json
   def new
     @organization = Organization.new
-
-    respond_to do |format|
-      format.js
+    respond_to do |f|
+      f.js
     end
   end
 
@@ -32,7 +38,7 @@ class OrganizationsController < ApplicationController
   # POST /organizations
   # POST /organizations.json
   def create
-    @organization = Organization.new(organization_params)
+    @organization = Organization.new organization_params
 
     respond_to do |f|
       if @organization.save
@@ -43,16 +49,14 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /organizations/1
-  # PATCH/PUT /organizations/1.json
+  # PUT /organizations/1
+  # PUT /organizations/1.json
   def update
-    respond_to do |format|
-      if @organization.update(organization_params)
-        format.html { redirect_to @organization, notice: 'Organization was successfully updated.' }
-        format.json { render :show, status: :ok, location: @organization }
+    respond_to do |f|
+      if @organization.update organization_params
+        f.js
       else
-        format.html { render :edit }
-        format.json { render json: @organization.errors, status: :unprocessable_entity }
+        f.js { render :template => 'layouts/error', locals: { errors: @user.errors } }
       end
     end
   end
@@ -61,20 +65,17 @@ class OrganizationsController < ApplicationController
   # DELETE /organizations/1.json
   def destroy
     @organization.destroy
-    respond_to do |format|
-      format.html { redirect_to organizations_url, notice: 'Organization was successfully destroyed.' }
-      format.json { head :no_content }
+    respond_to do |f|
+      f.js
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_organization
-      @organization = Organization.find(params[:id])
+      @organization = Organization.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def organization_params
-      params.require(:organization).permit(:name, :parent_id, :lft, :rgt, :depth)
+      params.require(:organization).permit(:depth, :lft, :name, :parent_id, :rgt)
     end
 end

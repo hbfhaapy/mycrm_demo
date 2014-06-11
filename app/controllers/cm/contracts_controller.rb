@@ -1,20 +1,45 @@
 class Cm::ContractsController < ApplicationController
+  load_and_authorize_resource :class => "Cm::Contract"
   before_action :set_cm_contract, only: [:show, :edit, :update, :destroy]
+
+  def advanced_search
+    @search = Cm::Contract.search(params[:q])
+    @search.build_grouping unless @search.groupings.any?
+    @cm_contracts  = params[:distinct].to_i.zero? ? @search.result : @search.result(distinct: true)
+
+    respond_with @cm_contracts
+  end
 
   # GET /cm/contracts
   # GET /cm/contracts.json
   def index
-    @cm_contracts = Cm::Contract.all
+    @q = Cm::Contract.accessible_by(current_ability).includes(:company, :agent, :status, :plan).order("created_at DESC").search(params[:q])
+    @cm_contracts = @q.result(:distinct => true).page(params[:page])
+
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @cm_contracts }
+    end
   end
 
   # GET /cm/contracts/1
   # GET /cm/contracts/1.json
   def show
+    @cm_contract = Cm::Contract.includes(:collections => :contract).find(params[:id])
   end
 
   # GET /cm/contracts/new
+  # GET /cm/contracts/new.json
   def new
-    @cm_contract = Cm::Contract.new
+    plan = Pm::Plan.find(params[:plan_id])
+    @cm_contract = plan.contracts.new
+    @cm_contract.company_id = plan.deal.company_id
+    @cm_contract.agent_id = plan.deal.user_id
+
+    respond_to do |f|
+      f.html # new.html.erb
+      f.json { render json: @cm_contract }
+    end
   end
 
   # GET /cm/contracts/1/edit
@@ -24,29 +49,30 @@ class Cm::ContractsController < ApplicationController
   # POST /cm/contracts
   # POST /cm/contracts.json
   def create
-    @cm_contract = Cm::Contract.new(cm_contract_params)
+    @cm_contract = Cm::Contract.new cm_contract_params
+    @cm_contract.user_id = current_user.id
 
-    respond_to do |format|
+    respond_to do |f|
       if @cm_contract.save
-        format.html { redirect_to @cm_contract, notice: 'Contract was successfully created.' }
-        format.json { render :show, status: :created, location: @cm_contract }
+        f.html { redirect_to @cm_contract, notice: '合同已成功创建' }
+        f.json { render json: @cm_contract, status: :created, location: @cm_contract }
       else
-        format.html { render :new }
-        format.json { render json: @cm_contract.errors, status: :unprocessable_entity }
+        f.html { render action: "new" }
+        f.json { render json: @cm_contract.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /cm/contracts/1
-  # PATCH/PUT /cm/contracts/1.json
+  # PUT /cm/contracts/1
+  # PUT /cm/contracts/1.json
   def update
-    respond_to do |format|
-      if @cm_contract.update(cm_contract_params)
-        format.html { redirect_to @cm_contract, notice: 'Contract was successfully updated.' }
-        format.json { render :show, status: :ok, location: @cm_contract }
+    respond_to do |f|
+      if @cm_contract.update cm_contract_params
+        f.html { redirect_to @cm_contract, notice: '合同已成功更新' }
+        f.json { head :no_content }
       else
-        format.html { render :edit }
-        format.json { render json: @cm_contract.errors, status: :unprocessable_entity }
+        f.html { render action: "edit" }
+        f.json { render json: @cm_contract.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -54,21 +80,19 @@ class Cm::ContractsController < ApplicationController
   # DELETE /cm/contracts/1
   # DELETE /cm/contracts/1.json
   def destroy
-    @cm_contract.destroy
-    respond_to do |format|
-      format.html { redirect_to cm_contracts_url, notice: 'Contract was successfully destroyed.' }
-      format.json { head :no_content }
+    @cm_contact.destroy
+    respond_to do |f|
+      f.html { redirect_to cm_contracts_url }
+      f.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_cm_contract
-      @cm_contract = Cm::Contract.find(params[:id])
+      @cm_contract = Cm::Contract.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def cm_contract_params
-      params.require(:cm_contract).permit(:name, :amount, :actual_amount, :status_id, :agent_id, :signed_at, :started_at, :company_id, :plan_id, :user_id)
+      params.require(:cm_contract).permit(:actual_amount, :agent_id, :amount, :company_id, :ended_at, :name, :plan_id, :signed_at, :started_at, :status_id, :user_id)
     end
 end

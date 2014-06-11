@@ -1,0 +1,14 @@
+%td= activity.name
+- if params[:action] == "index"
+  %td= link_to activity.activityable.name, activity.activityable
+%td= activity.status.name
+%td= activity.category.name
+%td
+  = time_ago_in_words activity.time
+  = activity.time.to_i > Time.now.to_i ? "后" : "前"
+%td= activity.person.name
+%td= activity.note
+%td
+  - if can? :manage, activity
+    = link_to '编辑', edit_crm_activity_path(activity), remote: true, class: "btn btn-warning btn-xs"
+    = link_to '删除', activity, method: :delete, data: { confirm: '确定删除?' }, class: "btn btn-danger btn-xs", remote: true

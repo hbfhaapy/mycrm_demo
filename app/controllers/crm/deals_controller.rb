@@ -1,20 +1,41 @@
 class Crm::DealsController < ApplicationController
+  load_and_authorize_resource :class => "Crm::Deal"
   before_action :set_crm_deal, only: [:show, :edit, :update, :destroy]
+  def advanced_search
+    @search = Crm::Deal.search(params[:q])
+    @search.build_grouping unless @search.groupings.any?
+    @crm_deals  = params[:distinct].to_i.zero? ? @search.result : @search.result(distinct: true)
+
+    respond_with @crm_deals
+  end
 
   # GET /crm/deals
   # GET /crm/deals.json
   def index
-    @crm_deals = Crm::Deal.all
+    @q = Crm::Deal.accessible_by(current_ability).includes(:status, :category, [:contact => :company]).order("created_at DESC").search(params[:q])
+    @crm_deals = @q.result(:distinct => true).page(params[:page])
+
+    respond_to do |f|
+      f.html # index.html.erb
+      f.json { render json: @crm_deals }
+    end
   end
 
   # GET /crm/deals/1
   # GET /crm/deals/1.json
   def show
+    @crm_deal = Crm::Deal.includes(:activities => [:status, :category, :person]).find(params[:id])
+    @chart = @crm_deal.basic_line_chart
   end
 
   # GET /crm/deals/new
+  # GET /crm/deals/new.json
   def new
-    @crm_deal = Crm::Deal.new
+    contact = Crm::Contact.find(params[:contact_id])
+    @crm_deal = contact.deals.new
+    respond_to do |f|
+      f.js
+    end
   end
 
   # GET /crm/deals/1/edit
@@ -24,29 +45,25 @@ class Crm::DealsController < ApplicationController
   # POST /crm/deals
   # POST /crm/deals.json
   def create
-    @crm_deal = Crm::Deal.new(crm_deal_params)
-
-    respond_to do |format|
+    @crm_deal = Crm::Deal.new crm_deal_params
+    @crm_deal.user_id = current_user.id
+    respond_to do |f|
       if @crm_deal.save
-        format.html { redirect_to @crm_deal, notice: 'Deal was successfully created.' }
-        format.json { render :show, status: :created, location: @crm_deal }
+        f.js
       else
-        format.html { render :new }
-        format.json { render json: @crm_deal.errors, status: :unprocessable_entity }
+        f.js { render :template => 'layouts/error', locals: { errors: @crm_deal.errors } }
       end
     end
   end
 
-  # PATCH/PUT /crm/deals/1
-  # PATCH/PUT /crm/deals/1.json
+  # PUT /crm/deals/1
+  # PUT /crm/deals/1.json
   def update
-    respond_to do |format|
-      if @crm_deal.update(crm_deal_params)
-        format.html { redirect_to @crm_deal, notice: 'Deal was successfully updated.' }
-        format.json { render :show, status: :ok, location: @crm_deal }
+    respond_to do |f|
+      if @crm_deal.update crm_deal_params
+        f.js
       else
-        format.html { render :edit }
-        format.json { render json: @crm_deal.errors, status: :unprocessable_entity }
+        f.js { render :template => 'layouts/error', locals: { errors: @crm_deal.errors } }
       end
     end
   end
@@ -55,20 +72,23 @@ class Crm::DealsController < ApplicationController
   # DELETE /crm/deals/1.json
   def destroy
     @crm_deal.destroy
-    respond_to do |format|
-      format.html { redirect_to crm_deals_url, notice: 'Deal was successfully destroyed.' }
-      format.json { head :no_content }
+
+    respond_to do |f|
+      if params[:from] == "show"
+        f.html { redirect_to crm_deals_url }
+        f.json { head :no_content }
+      else
+        f.js
+      end
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_crm_deal
-      @crm_deal = Crm::Deal.find(params[:id])
+      @crm_deal = Crm::Deal.find params[:id]
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def crm_deal_params
-      params.require(:crm_deal).permit(:name, :status_id, :category_id, :amount, :company_id, :contact_id, :user_id, :time)
+      params.require(:crm_deal).permit(:amount, :category_id, :company_id, :contact_id, :name, :status_id, :user_id, :activities_count, :time)
     end
 end

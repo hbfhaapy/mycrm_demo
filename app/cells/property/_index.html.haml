@@ -1,0 +1,5 @@
+.ajax-form
+%table.table.table-striped
+  %tbody
+    - properties.each do |property|
+      = render partial: "form", locals: { property: property }

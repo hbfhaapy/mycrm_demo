@@ -1,19 +1,16 @@
-%h1 Listing roles
-
-%table
-  %tr
-    %th Name
-    %th
-    %th
-    %th
-
-  - @roles.each do |role|
+%h1.clearfix
+  %span.pull-left
+    权限管理
+    %span.red
+      共#{@roles.size}个
+  = link_to "新增权限", new_role_path, remote: true, class: "btn btn-primary pull-right"
+.ajax-form
+%table.table.table-striped.table-hover
+  %thead
     %tr
-      %td= role.name
-      %td= link_to 'Show', role
-      %td= link_to 'Edit', edit_role_path(role)
-      %td= link_to 'Destroy', role, :method => :delete, :data => { :confirm => 'Are you sure?' }
-
-%br
-
-= link_to 'New Role', new_role_path
+      %th 名称
+      %th ID
+      %th 操作
+  %tbody
+    - @roles.each do |role|
+      = render partial: "roles/role", locals: { role: role }

@@ -1,0 +1,2 @@
+<% object = params[:children] %>
+$("#<%= object %>").html('<%= escape_javascript(render partial: "crm/companies/#{object}", locals: { company: @crm_company }) %>')

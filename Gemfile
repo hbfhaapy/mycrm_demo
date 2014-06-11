@@ -69,3 +69,9 @@ gem 'the_sortable_tree'
 gem 'jquery-ui-rails'  # sort tree require
 gem 'font-awesome-rails' #图标
 gem 'selectize-rails'
+# partial
+gem 'cells'
+# message
+gem 'messengerjs-rails'
+#chart
+gem 'lazy_high_charts'
