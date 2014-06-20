@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140610223408) do
+ActiveRecord::Schema.define(version: 20140612095721) do
 
   create_table "cm_collections", force: true do |t|
     t.string   "name"
@@ -49,11 +49,11 @@ ActiveRecord::Schema.define(version: 20140610223408) do
     t.integer  "user_id"
     t.string   "note"
     t.integer  "activityable_id"
-    t.integer  "activityable_type"
     t.datetime "time"
     t.integer  "person_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "activityable_type"
   end
 
   add_index "crm_activities", ["user_id"], name: "index_crm_activities_on_user_id", using: :btree
@@ -189,8 +189,8 @@ ActiveRecord::Schema.define(version: 20140610223408) do
     t.integer "role_id"
   end
 
-  add_index "roles_users", ["role_id"], name: "index_table_roles_users_on_role_id", using: :btree
-  add_index "roles_users", ["user_id"], name: "index_table_roles_users_on_user_id", using: :btree
+  add_index "roles_users", ["role_id"], name: "index_roles_users_on_role_id", using: :btree
+  add_index "roles_users", ["user_id"], name: "index_roles_users_on_user_id", using: :btree
 
   create_table "smartfinders", force: true do |t|
     t.string   "url"

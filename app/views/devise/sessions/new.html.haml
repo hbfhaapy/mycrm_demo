@@ -1,0 +1,18 @@
+.panel.panel-default.w320.center-box.mt10
+  .panel-heading
+    %h3.panel-title 登陆
+  .panel-body
+    = content_tag(:div, flash[:error], class: "alert alert-danger") if flash[:error]
+    = content_tag(:div, flash[:notice], class: "alert alert-danger") if flash[:notice]
+    = content_tag(:div, flash[:alert], class: "alert alert-danger") if flash[:alert]
+    = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+      .form-group
+        = f.label :login
+        = f.text_field :login, class: "form-control"
+      .form-group
+        = f.label :password
+        = f.password_field :password, class: "form-control"
+      = f.submit "登陆系统", :class => "btn btn-primary btn-block btn-lg"
+    = render "devise/shared/links"
+.text-center.center-box.w320.mt1
+  = link_to "来自旺田云服务", 'http://www.netfarmer.com.cn', target: '_blank'

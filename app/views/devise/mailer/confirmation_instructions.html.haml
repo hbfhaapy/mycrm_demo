@@ -1,0 +1,4 @@
+%p
+  欢迎加入嗨皮育儿社区 #{@resource.email}!
+%p 你可以通过下面的链接激活您的账号
+%p= link_to '点击激活账号', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)

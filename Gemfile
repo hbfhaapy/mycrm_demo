@@ -75,3 +75,5 @@ gem 'cells'
 gem 'messengerjs-rails'
 #chart
 gem 'lazy_high_charts'
+# timeline
+gem 'timelineJS-rails'

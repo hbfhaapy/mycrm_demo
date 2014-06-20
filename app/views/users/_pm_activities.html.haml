@@ -1,0 +1,19 @@
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th 名称
+      %th 状态
+      %th 类型
+      %th 阶段
+      %th 时间
+  %tbody
+    - user.pm_activities.includes(:status, :stage, :category, :project).page(params[:page]).each do |activity|
+      %tr
+        %td= activity.name
+        %td= pm_status_tag(activity.status)
+        %td= activity.category.name
+        %td= link_to activity.stage.name, activity.stage
+        %td= link_to activity.project.name, activity.project
+        %td= activity.time.strftime "%Y-%m-%d"
+.text-center
+  = paginate @user.pm_activities.page(params[:page]), { :params => { :controller => params[:controller], :action => "show", children: "pm_activities" } }

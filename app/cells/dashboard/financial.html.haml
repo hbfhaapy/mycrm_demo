@@ -1,4 +1,65 @@
-%h1
-  Dashboard#financial
-%p
-  Find me in app/cells/dashboard/financial.html.haml
+.panel.panel-default
+  = high_chart('collections_situation_chart', @collections_situation_chart)
+  .panel-footer.clearfix.text-center
+    .col-md-3.col-xs-3
+      %h3= @billing_counts
+      开票
+    .col-md-3.col-xs-3
+      %h3= @income_counts
+      到款
+    .col-md-3.col-xs-3
+      %h3.red
+        = number_to_currency(@billings_amount, unit: "")
+        元
+      开票总额
+    .col-md-3.col-xs-3
+      %h3.green
+        = number_to_currency(@next_month_collection_counts, unit: "")
+        元
+      下月到款总额
+.row
+  .col-md-4
+    .panel
+      .panel-heading
+        %h4
+          = fa_icon "pencil-square-o", text: "最新开票", class: "red"
+          = link_to "查看全部", fm_billings_path, class: "pull-right btn btn-default btn-xs"
+      .panel-body.list-group
+        - @lasted_billings.each do |billing|
+          = link_to billing.collection, class: "list-group-item clearfix" do
+            .pull-left.mr1
+              = content_tag :span, "#{number_to_currency(billing.amount, unit: '')}元", class: "red font12"
+            .pull-left
+              = content_tag :span, billing.collection.contract.plan.name, class: "label label-gray"
+            .pull-right.light.font12
+              = billing.time.strftime "%y-%m-%d"
+  .col-md-4
+    .panel
+      .panel-heading
+        %h4
+          = fa_icon "money", text: "最新到款", class: "green"
+          = link_to "查看全部", fm_incomes_path, class: "pull-right btn btn-default btn-xs"
+      .panel-body.list-group
+        - @lasted_incomes.each do |income|
+          = link_to income.collection, class: "list-group-item clearfix" do
+            .pull-left.mr1
+              = content_tag :span, "#{number_to_currency(income.amount, unit: '')}元", class: "green font12"
+            .pull-left
+              = content_tag :span, income.collection.contract.plan.name, class: "label label-gray"
+            .pull-right.light.font12
+              = income.time.strftime "%y-%m-%d"
+  .col-md-4
+    .panel
+      .panel-heading
+        %h4
+          = fa_icon "tasks", text: "最新收款计划", class: "blue"
+          = link_to "查看全部", cm_collections_path, class: "pull-right btn btn-default btn-xs"
+      .panel-body.list-group
+        - @lasted_collections.each do |collection|
+          = link_to collection, class: "list-group-item clearfix" do
+            .pull-left.w70.mr1
+              = collection_process_tag collection
+            .pull-left
+              = collection.name
+            .pull-right.light.font12
+              = collection.created_at.strftime "%y-%m-%d"

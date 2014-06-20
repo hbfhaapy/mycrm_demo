@@ -1,9 +1,8 @@
-.alert.alert-warning.row
+.alert.alert-warning.form-inline.mt1
   %a.close{"aria-hidden" => "true", "data-dismiss" => "alert", :href => "#"} &times;
   = simple_form_for(@user, :url=>{:action=>:add}, remote: true) do |f|
-    .form-group.col-md-4
-      = f.input :username, label: false, placeholder: '用户名', required: true, input_html: { class: "form-control input-sm", autofocus: true }
-    .form-group.col-md-4
-      = f.input :email, label: false, placeholder: '邮箱', required: true, input_html: { class: "form-control input-sm" }
-    .col-md-2
-      = f.submit "提交", class: "btn btn-success"
+    .form-group
+      = f.input :username, label: false, placeholder: '用户名', required: true, input_html: { class: "form-control" }
+    .form-group
+      = f.input :email, label: false, placeholder: '邮箱', required: true, input_html: { class: "form-control" }
+    = f.submit "提交", class: "btn btn-success"

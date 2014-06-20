@@ -1,0 +1,2 @@
+<% object = params[:children] %>
+$("#<%= object %> .panel").html('<%= escape_javascript(render partial: "users/#{object}", locals: { user: @user }) %>')

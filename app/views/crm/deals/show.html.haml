@@ -26,17 +26,6 @@
     #activities
       = render partial: "crm/activities/index", locals: { object: @crm_deal }
   .col-md-3
-    .panel.plans.panel-default
-      .panel-heading.clearfix
-        %h3.pull-left 项目
-        = link_to "立项", new_pm_plan_path(deal_id: params[:id]), class: "btn btn-primary pull-right", remote: true
-      .ajax-form
-      %table.table.table-striped.table-hover
-        %thead
-          %th 名称
-        %tbody
-          - @crm_deal.plans.accessible_by(current_ability).each do |plan|
-            = render partial: "pm/plans/simple_plan", locals: { plan: plan }
     .panel.pricelists.panel-default
       .panel-heading.clearfix
         %h3.pull-left 报价单

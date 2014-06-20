@@ -6,7 +6,7 @@ class Crm::Activity < ActiveRecord::Base
   belongs_to :person, class_name: "Contact"
 
 
-  validates :name, :status_id, :category_id, :activityable_id, :activityable_type, :time, :person_id, :presence => true
+  validates :name, :status_id, :category_id, :activityable_type, :time, :person_id, :presence => true
 
   def self.situation_chart
     activities_data = self.by_year.where("MONTH(time) in (?)", (1..12)).group("MONTH(time)").size

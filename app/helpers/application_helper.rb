@@ -61,10 +61,9 @@ module ApplicationHelper
   def timeline_data
     @posts.collect{|p|
       "{
-      'startDate': '#{p.started_at.strftime("%Y,%m,%d")}',
-      'endDate': '#{p.ended_at.strftime("%Y,%m,%d")}',
-      'headline': '#{p.title}',
-      'text': '#{sanitize p.content.gsub(/\r?\n/, "<br/>"), :tags => ok_tags}',
+      'startDate': '#{p.created_at.strftime("%Y,%m,%d")}',
+      'headline': '#{p.name}',
+      'text': '#{sanitize p.name, :tags => ok_tags}',
       'tag': '#{p.category.name}'
       }"
     }.join(",").html_safe

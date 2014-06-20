@@ -70,6 +70,6 @@ class Crm::Activity::StatusesController < ApplicationController
     end
 
     def crm_activity_status_params
-      params.require(:crm_activity_status).permit(:name)
+      params.require(:crm_activity_status_params).permit(:name)
     end
 end

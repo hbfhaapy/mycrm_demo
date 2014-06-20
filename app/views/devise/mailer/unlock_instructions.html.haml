@@ -1,0 +1,4 @@
+%p
+  你好 #{@resource.email}!
+%p 由于过量的登录失败，您的账号已被锁定。
+%p= link_to '解锁我的账号', unlock_url(@resource, :unlock_token => @resource.unlock_token)

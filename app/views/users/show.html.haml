@@ -1,13 +1,98 @@
+= notice_tag(notice)
 .panel.panel-default
   .panel-body
     = image_tag(@user.avatar_url(:large), class: "pull-left mr1")
-    / - if can? :update, @user
-    = link_to "修改个人信息", edit_user_path, class: "pull-right"
+    - if can? :update, @user
+      = link_to "修改个人信息", edit_user_path, class: "pull-right"
     %h1= @user.username
     %p
       邮箱：#{@user.email}
       %br/
       部门：#{user_org_tag(@user)}
+      \&nbsp;&nbsp;审核级别：#{user_checking_level_tag(@user)}
       \&nbsp;&nbsp;权限：#{user_roles_tag(@user)}
   .panel-footer
     = @user.last_sign_in_at ? "上次登陆于#{time_ago_in_words @user.last_sign_in_at}前" : "从未登陆"
+%ul.nav.nav-tabs
+  %li.active
+    %a{"data-toggle" => "tab", :href => "#manager_plans"}
+      项目
+      %span.red= @user.manage_plans.size
+      %span.light (负责)
+  %li
+    %a{"data-toggle" => "tab", :href => "#projects"}
+      子项
+      %span.red= @user.manage_projects.size
+      %span.light (负责)
+  %li
+    %a{"data-toggle" => "tab", :href => "#pm_activities"}
+      项目活动
+      %span.red= @user.pm_activities.size
+.tab-content.mt1
+  #manager_plans.tab-pane.active
+    .panel.panel-default
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th 名称
+            %th 预算
+            %th 类型
+            %th 状态
+            %th 助理
+            %th 客户
+            %th 专业负责人
+            %th 成员
+            %th 预计
+            %th 实际
+            %th 相差
+        %tbody
+          - @user.manage_plans.where(approved: 1).includes(:status, :category, :major_managers, :members, :assistant, :company).each do |pm_plan|
+            %tr{:id => "pm-plan-#{pm_plan.id}"}
+              %td= link_to pm_plan.name, pm_plan
+              %td.red
+                = number_to_currency(pm_plan.cost, unit: "")
+                元
+              %td= pm_plan.category.name
+              %td= pm_status_tag(pm_plan.status)
+              %td= link_to pm_plan.assistant.username, pm_plan.assistant
+              %td= link_to pm_plan.company.name, pm_plan.company
+              %td= pm_plan.major_managers.map { |u| u.username }.join(",")
+              %td= fa_icon "users", class: "plan-members light", 'data-toggle' => "tooltip", 'data-original-title' => pm_plan.members.map { |u| u.username }.join(",")
+              %td
+                预计：#{pm_plan.planned_started_at.strftime "%Y-%m-%d"}
+                到
+                \#{pm_plan.planned_ended_at.strftime "%Y-%m-%d"}
+              %td
+                实际：#{pm_plan.started_at ? pm_plan.started_at.strftime("%Y-%m-%d") : "--"}
+                到
+                \#{pm_plan.ended_at ? pm_plan.ended_at.strftime("%Y-%m-%d") : "--"}
+              %td= pm_time_diff_tag(pm_plan)
+  #projects.tab-pane
+    .panel.panel-default
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th 名称
+            %th 状态
+            %th 项目
+            %th 预计
+            %th 实际
+            %th 相差
+        %tbody
+          - @user.manage_projects.includes(:status, :plan).each do |pm_project|
+            %tr{:id => "pm-project-#{pm_project.id}"}
+              %td= link_to pm_project.name, pm_project
+              %td= pm_status_tag(pm_project.status)
+              %td= link_to pm_project.plan.name, pm_project.plan
+              %td
+                预计：#{pm_project.planned_started_at.strftime "%Y-%m-%d"}
+                到
+                \#{pm_project.planned_ended_at.strftime "%Y-%m-%d"}
+              %td
+                实际：#{pm_project.started_at ? pm_project.started_at.strftime("%Y-%m-%d") : "--"}
+                到
+                \#{pm_project.ended_at ? pm_project.ended_at.strftime("%Y-%m-%d") : "--"}
+              %td= pm_time_diff_tag(pm_project)
+  #pm_activities.tab-pane
+    .panel.panel-default
+      = render partial: "users/pm_activities", locals: { user: @user }

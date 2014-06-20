@@ -1,4 +1,72 @@
-%h1
-  Dashboard#sales
-%p
-  Find me in app/cells/dashboard/sales.html.haml
+.panel.panel-default
+  = high_chart('sale_people_situation', @sale_people_situation_chart)
+  .panel-footer.clearfix.text-center
+    .col-md-3.col-xs-3
+      %h3= @company_counts
+      客户
+    .col-md-3.col-xs-3
+      %h3= @contact_counts
+      联系人
+    .col-md-3.col-xs-3
+      %h3= @deal_counts
+      商机
+    .col-md-3.col-xs-3
+      %h3= @activity_counts
+      活动
+.row
+  .col-md-3
+    .panel
+      = high_chart('deals_situation', @deals_situation_chart)
+  .col-md-3
+    .panel
+      = high_chart('contracts_situation', @contracts_situation_chart)
+  .col-md-6
+    .panel
+      = high_chart('activities_situation', @activities_situation_chart)
+.row
+  .col-md-4
+    .panel
+      .panel-heading
+        %h4
+          = fa_icon "money", text: "最新商机", class: "blue"
+          = link_to "查看全部", crm_deals_path, class: "pull-right btn btn-default btn-xs"
+      .panel-body.list-group
+        - @lasted_deals.each do |deal|
+          = link_to deal, class: "list-group-item clearfix" do
+            .w70.pull-left
+              = content_tag :span, deal.user.username, class: "label label-gray"
+            .pull-left
+              = content_tag :span, "#{number_to_currency(deal.amount, unit: '')}元", class: "red font12 mr1"
+              = deal.name
+            .pull-right.light.font12
+              = deal.created_at.strftime "%y-%m-%d"
+  .col-md-4
+    .panel
+      .panel-heading
+        %h4
+          = fa_icon "comments", text: "最新活动", class: "red"
+          = link_to "查看全部", crm_activities_path, class: "pull-right btn btn-default btn-xs"
+      .panel-body.list-group
+        - @lasted_activities.each do |activity|
+          = link_to activity.activityable, class: "list-group-item clearfix" do
+            .pull-left
+              = content_tag :span, activity.activityable.name, class: "label label-gray"
+              = activity.name
+            .pull-right.light.font12
+              = activity.time.strftime "%y-%m-%d"
+  .col-md-4
+    .panel
+      .panel-heading
+        %h4
+          = fa_icon "users", text: "最新联系人", class: "green"
+          = link_to "查看全部", crm_contacts_path, class: "pull-right btn btn-default btn-xs"
+      .panel-body.list-group
+        - @lasted_contacts.each do |contact|
+          = link_to contact, class: "list-group-item clearfix" do
+            .pull-left
+              = contact.name
+              - if contact.company
+                = content_tag :span, contact.company.name, class: "label label-gray"
+            .pull-right.light.font12
+              = contact.user.username
+              = contact.created_at.strftime "%y-%m-%d"

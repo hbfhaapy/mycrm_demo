@@ -9,10 +9,10 @@
             <ul class="dropdown-menu">
               <li><%= link_to "个人首页", root_path %></li>
               <% if can? :dashboard, :crm %>
-                <li><%= link_to "销售报表" %></li>
+                <li><%= link_to "销售报表",dashboard_crm_overview_path %></li>
               <% end %>
               <% if can? :dashboard, :fm %>
-                <li><%= link_to "财务报表" %></li>              
+                <li><%= link_to "财务报表", dashboard_fm_overview_path%></li>
               <% end %>
             </ul>
           </li>

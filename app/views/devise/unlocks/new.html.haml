@@ -1,0 +1,12 @@
+.center-box
+  .content-box
+    %h2 解锁
+    = devise_error_messages!
+    .cell
+      = form_for(resource, :as => resource_name, :url => unlock_path(resource_name), :html => { :method => :post }) do |f|
+        .field
+          = f.label :email
+          = f.email_field :email, :class => "text-input"
+        .actions
+          = f.submit "发送解锁验证", :class => "btn"
+      = render "devise/shared/links"

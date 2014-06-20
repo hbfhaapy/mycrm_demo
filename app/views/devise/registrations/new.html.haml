@@ -1,0 +1,21 @@
+.panel.panel-default.w320.center-box.mt10
+  .panel-heading
+    %h3.panel-title 注册
+  .panel-body
+    = devise_error_messages!
+    = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+      .form-group
+        = f.label :username
+        = f.text_field :username, :class => "form-control"
+      .form-group
+        = f.label :email
+        = f.email_field :email, :class => "form-control"
+      .form-group
+        = f.label :password
+        = f.password_field :password, class: "form-control"
+      .form-group
+        = f.label :password_confirmation
+        = f.text_field :password_confirmation, :class => "form-control"
+      = f.submit "注册", :class => "btn btn-success btn-lg btn-block"
+.text-center.center-box.mt1.w320
+  = link_to "来自旺田云服务", 'http://www.netfarmer.com.cn', target: '_blank'

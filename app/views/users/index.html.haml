@@ -18,6 +18,7 @@
       %th= sort_link @q, :username, "姓名", {}, :method => action_name == 'users_advanced_search' ? :post : :get
       %th= sort_link @q, :email, "邮箱", {}, :method => action_name == 'users_advanced_search' ? :post : :get
       %th 部门
+      %th 审核级别
       %th 操作
   %tbody
     - @users.each do |u|

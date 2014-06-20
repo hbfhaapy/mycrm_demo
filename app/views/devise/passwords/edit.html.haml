@@ -1,0 +1,16 @@
+.center-box
+  .content-box
+    %h2 修改密码
+    = devise_error_messages!
+    .cell
+      = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f|
+        = f.hidden_field :reset_password_token
+        .field
+          = f.label :password, "新密码"
+          = f.password_field :password, :class => "text-input"
+        .field
+          = f.label :password_confirmation, "再次输入"
+          = f.password_field :password_confirmation, :class => "text-input"
+        .actions
+          = f.submit "修改密码", :class => "btn"
+      = render "devise/shared/links"

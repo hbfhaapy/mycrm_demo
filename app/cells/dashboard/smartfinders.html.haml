@@ -1,4 +1,17 @@
-%h1
-  Dashboard#smartfinders
-%p
-  Find me in app/cells/dashboard/smartfinders.html.haml
+.panel.panel-default
+  .panel-heading
+    %h3 个性化视图
+  %table.table.table-striped
+    %tbody
+      - @smartfinders.group_by(&:klass).each_with_index do |finders, index|
+        %tr
+          %td= finders.first
+          %td
+            %table.table.table-hover.children
+              - finders.last.each do |finder|
+                %tr{:id => "smartfinder-#{finder.id}"}
+                  %td
+                    = link_to finder.name, finder.url, class: "name"
+                  %td
+                    = link_to "编辑", edit_smartfinder_path(finder), remote: true, class: "btn btn-warning btn-xs"
+                    = link_to '删除', finder, method: :delete, data: { confirm: '确定删除?' }, remote: true, class: "btn btn-danger btn-xs"
